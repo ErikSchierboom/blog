@@ -1,0 +1,1 @@
+This repository contains the source for my blog: https://www.erikschierboom.com

@@ -1,0 +1,54 @@
+baseURL = "https://www.erikschierboom.com/"
+languageCode = "en-us"
+title = "Schier"
+theme = "hermit"
+
+pygmentsCodefences  = true
+pygmentsUseClasses  = true
+
+[author]
+  name = "Erik Schierboom"
+
+[permalinks]
+  posts = "/:year/:month/:day/:title/"
+
+[params]
+  dateform        = "Jan 2, 2006"
+  dateformShort   = "Jan 2"
+  dateformNum     = "2006-01-02"
+  dateformNumTime = "2006-01-02 15:04 -0700"
+
+  homeSubtitle = "Coding for fun"
+
+  [[params.social]]
+    name = "github"
+    url = "https://github.com/erikschierboom/"
+
+  [[params.social]]
+    name = "twitter"
+    url = "http://twitter.com/erikschierboom/"
+
+  [[params.social]]
+    name = "stackoverflow"
+    url = "https://stackoverflow.com/users/2071395/erik-schierboom/"
+
+  [[params.social]]
+    name = "linkedin"
+    url = "https://www.linkedin.com/in/erikschierboom/"
+
+[menu]
+
+  [[menu.main]]
+    name = "Posts"
+    url = "posts/"
+    weight = 10
+
+  [[menu.main]]
+    name = "About"
+    url = "about/"
+    weight = 20
+
+  [[menu.main]]
+    name = "Software"
+    url = "software/"
+    weight = 30
