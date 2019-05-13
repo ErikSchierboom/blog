@@ -6,6 +6,8 @@ theme = "hermit"
 pygmentsCodefences  = true
 pygmentsUseClasses  = true
 
+googleAnalytics = "UA-55550473-1"
+
 [author]
   name = "Erik Schierboom"
 
