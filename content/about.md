@@ -9,7 +9,7 @@ Besides writing software, I have a passion for sharing knowledge. As such, I'm m
 
 ### Work
 
-I am currently working at [CCV](https://www.ccv.eu/nl/). If you want to know more about my professional career, please visit my [LinkedIn page](http://nl.linkedin.com/in/erikschierboom).
+I am currently working at [Exercism](https://exercism.io/team/staff). If you want to know more about my professional career, please visit my [LinkedIn page](http://nl.linkedin.com/in/erikschierboom).
 
 ### Hobbies
 
