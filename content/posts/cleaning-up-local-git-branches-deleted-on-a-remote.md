@@ -129,6 +129,8 @@ Deleted branch grammar-fix (was 01257bd).
 
 The behavior is exactly the same as manually running `git fetch -p` followed by our custom command. Nice, isn't it?
 
+Interestingly, due to the way git is implemented on Windows, the above alias also works on Windows.
+
 # Conclusion
 
 In this blog post, we've shown how to cleanup local git branches that are tracking remote branches that no longer exist. We did this by combining the `git for-each-ref` command with the `awk` and `xargs` commands. As a bonus, we added a git alias for our cleanup command that allows us to cleanup our local branches using `git gone`.
