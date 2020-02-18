@@ -86,7 +86,7 @@ The next step is to filter the branches which remote branch is gone. We can do t
 
 ```
 $ git for-each-ref --format '%(refname:short) %(upstream:track)' |
-  awk '$2 == "[gone]" {git branch -D $1}'
+  awk '$2 == "[gone]" {print $1}'
 fix-typo
 grammar-fix
 ```
