@@ -96,7 +96,7 @@ Sweet! The final step is to pipe this output to `xargs` to delete the branches:
 ```
 $ git for-each-ref --format '%(refname:short) %(upstream:track)' |
   awk '$2 == "[gone]" {print $1}' |
-  xargs git branch -D
+  xargs -r git branch -D
 
 Deleted branch fix-typo (was 7b57d4f).
 Deleted branch grammar-fix (was 01257bd).
@@ -110,7 +110,7 @@ Our final step is to add our command as a [git alias](https://git-scm.com/book/e
 
 ```
 [alias]
-  gone = ! "git fetch -p && git for-each-ref --format '%(refname:short) %(upstream:track)' | awk '$2 == \"[gone]\" {print $1}' | xargs git branch -D"
+  gone = ! "git fetch -p && git for-each-ref --format '%(refname:short) %(upstream:track)' | awk '$2 == \"[gone]\" {print $1}' | xargs -r git branch -D"
 ```
 
 The `gone` alias does two things:
