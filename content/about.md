@@ -9,7 +9,7 @@ Besides writing software, I have a passion for sharing knowledge. As such, I'm m
 
 ### Work
 
-I am currently working at [Exercism](https://exercism.io/team/staff). If you want to know more about my professional career, please visit my [LinkedIn page](http://nl.linkedin.com/in/erikschierboom). You can also find me on [Twitter](https://twitter.com/ErikSchierboom).
+I am currently self-employed. My current project is building [Exercism v3](https://exercism.io/team/staff). If you want to know more about my professional career or are interested in hiring me, please visit my [LinkedIn page](http://nl.linkedin.com/in/erikschierboom). You can also find me on [Twitter](https://twitter.com/ErikSchierboom).
 
 ### Hobbies
 
