@@ -54,3 +54,8 @@ googleAnalytics = "UA-55550473-1"
     name = "Software"
     url = "software/"
     weight = 30
+
+  [[menu.main]]
+    name = "Speaking"
+    url = "speaking/"
+    weight = 40
