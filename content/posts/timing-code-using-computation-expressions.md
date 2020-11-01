@@ -6,41 +6,53 @@ tags:
   - Computation expressions
 ---
 
-While building a link checking tool, I wanted to log the time it took to check a link. The go-to class to measure elapsed time in .NET applications is the [`Stopwatch` class](https://docs.microsoft.com/en-us/dotnet/api/system.diagnostics.stopwatch?view=netcore-3.1). The first implementation looked like this:
+While building a link checking tool, I wanted to log the time it took to check a link. To measure the execution time a code in a .NET application, we can use [`Stopwatch` class](https://docs.microsoft.com/en-us/dotnet/api/system.diagnostics.stopwatch?view=netcore-3.1), which is designed specifically for this purpose.
+
+For demonstration purposes, the link checking function is defined as follows:
+
+```fsharp
+let linkIsValid () =
+    // Simulate link checking by sleeping for a second
+    System.Threading.Thread.Sleep(TimeSpan.FromSeconds(1.))
+
+    true
+```
+
+We can use the `Stopwatch` class to time how long this function takes to execute:
 
 ```fsharp
 // Create the stopwatch and immediately start measuring time
 let stopwatch = System.Diagnostics.Stopwatch.StartNew()
 
 // Execute the function we want to time
-let linkStatus = checkLink()
+let isValid = linkIsValid()
 
 // Stop measuring time
-stopwatch.stop()
+stopwatch.Stop()
 
-// Output the measured (elapsed) time (e.g. 00:00:12.9415700)
+// Output the measured (elapsed) time (e.g. 00:00:01.0053087)
 printfn "%A" stopwatch.Elapsed
 ```
 
 Nice and simple.
 
-To allow re-using the link timing functionality, we can create a new function that returns the link check result and the elapsed time as a tuple:
+To allow re-using the link timing functionality, we can create a new function that returns the link check result _and_ the elapsed time as a tuple:
 
 ```fsharp
-let checkLinkWithTiming() =
+let linkIsValidWithTiming() =
   let stopwatch = System.Diagnostics.Stopwatch.StartNew()
-  let linkStatus = checkLink()
-  stopwatch.stop()
+  let linkStatus = linkIsValid()
+  stopwatch.Stop()
 
   linkStatus, stopwatch.Elapsed
 
-let linkStatus, elapsedTime = checkLinkWithTiming()
-printfn "%A" elapsedTime
+let isValid, elapsed = linkIsValidWithTiming()
+printfn "%A" elapsed
 ```
 
 ## Generalizing
 
-Some time later, I found that I wanted to time other functions too. We can generalize the `checkLinkWithTiming` function to work with other functions too by taking the function to time as a parameter:
+But what if we want to time other functions? Well, we can generalize the `linkIsValidWithTiming` function to work with other functions by taking the function to time as a parameter:
 
 ```fsharp
 let executeAndTime func =
@@ -49,16 +61,16 @@ let executeAndTime func =
   // Call the `func` parameter (which is a function)
   let funcResult = func()
 
-  stopwatch.stop()
+  stopwatch.Stop()
 
   funcResult, stopwatch.Elapsed
 ```
 
-We can then pass in the `checkLink()` function as an argument to get its result and its timing information:
+We can then pass in the `linkIsValid()` function as an argument to get its result and its timing information:
 
 ```fsharp
-let linkStatus, elapsedTime = executeAndTime checkLink
-printfn "%A" elapsedTime
+let isValid, elapsed = executeAndTime linkIsValid
+printfn "%A" elapsed
 ```
 
 ## Timing type
@@ -75,19 +87,34 @@ We can then return this type from our `executeAndTime()` function:
 let executeAndTime func =
   let stopwatch = System.Diagnostics.Stopwatch.StartNew()
   let funcResult = func()
-  stopwatch.stop()
+  stopwatch.Stop()
 
   Timed(Result = funcResult, Elapsed = stopwatch.Elapsed)
 
-let timedLinkCheckResult = executeAndTime checkLink
-printfn "%A" timedLinkCheckResult.Elapsed
+let (Timed(Elapsed = elapsed)) = executeAndTime linkIsValid
+printfn "%A" elapsed
 ```
 
-TODO: explain why this is better
+To me, this version has better _motivational transparency_ [^1] as it makes it more explicit what the code is doing.
 
 ## Timing asynchronous functions
 
-TODO: add asynchronous timing
+To make the link checking more efficient, let's convert the `linkIsValid()` function to be asynchronous:
+
+```fsharp
+let linkIsValid () = async {
+    do! Async.Sleep(1000)
+    return true
+}
+```
+
+If we re-run our code, the code still works, but the elapsed time seems to be off:
+
+```
+00:00:00.0010091
+```
+
+As the function should run for _at least_ 1000 milliseconds, this can't be right. The problem is that we don't wait for the async function to complete. This means that we're not timing the execution of the function from begin to end, but only the time it takes to begin executing it.
 
 ## Computation Expression
 
@@ -113,3 +140,5 @@ let timed = TimedBuilder()
 # Conclusion
 
 TODO
+
+[^1]: [Stylish F# by Kit Eason](https://www.apress.com/gp/book/9781484239995).
