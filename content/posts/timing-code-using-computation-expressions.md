@@ -1,6 +1,6 @@
 ---
 title: Timing code using computation expressions
-date: 2020-09-28
+date: 2020-12-10
 tags:
   - F#
   - Computation expressions
