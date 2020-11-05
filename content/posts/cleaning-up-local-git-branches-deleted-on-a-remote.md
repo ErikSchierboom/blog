@@ -129,6 +129,12 @@ Deleted branch grammar-fix (was 01257bd).
 
 The behavior is exactly the same as manually running `git fetch -p` followed by our custom command. Nice, isn't it?
 
+You don't even have to manually edit the `.gitignore` file, as the alias can also be added using the following command:
+
+```
+git config --global alias.gone "! git fetch -p && git for-each-ref --format '%(refname:short) %(upstream:track)' | awk '\$2 == \"[gone]\" {print \$1}' | xargs -r git branch -D"
+```
+
 Interestingly, due to the way git is implemented on Windows, the above alias also works on Windows.
 
 # Conclusion
