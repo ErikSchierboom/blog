@@ -106,7 +106,7 @@ And that's it! We now have a single command to delete all local branches which r
 
 # Integrating with git
 
-Our final step is to add our command as a [git alias](https://git-scm.com/book/en/v2/Git-Basics-Git-Aliases), which allows one to define custom commands that can be called as if they were built into git. Aliases in git are defined in the `.gitconfig` file found in your home dir. Within that file, find (or add) the `[alias]` section, and add an alias named `gone`:
+Our final step is to add our command as a [git alias](https://git-scm.com/book/en/v2/Git-Basics-Git-Aliases), which allows one to define custom commands that can be called as if they were built into git. Aliases in git are defined in the `.gitconfig` file found in your home dir. You can edit this file by running: `git config --global --edit`. Within that file, find the `[alias]` section (or add it), and add an alias to it named `gone`:
 
 ```
 [alias]
