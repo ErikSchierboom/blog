@@ -2,10 +2,10 @@
 title: Solving reverse polish notation equations in WebAssembly using F#
 date: 2019-12-06
 tags:
-  - F#
-  - Fable
-  - Elmish
-  - WebAssembly
+  - fsharp
+  - fable
+  - elmish
+  - webassembly
 ---
 
 Note: this blog post is part of the [F# advent calendar 2019](https://sergeytihon.com/2019/11/05/f-advent-calendar-in-english-2019/).

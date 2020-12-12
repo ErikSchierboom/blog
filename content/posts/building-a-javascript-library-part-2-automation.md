@@ -1,10 +1,10 @@
 ---
 title: "Building a JavaScript library - part 2: automation"
 date: 2015-08-12
-tags: 
-  - JavaScript
-  - Knockout
-  - Automation
+tags:
+  - javascript
+  - knockout
+  - automation
 ---
 
 This is the second in a [series of posts]({{< ref "/posts/building-a-javascript-library" >}}) that discuss the steps taken to publish our library. The [previous post]({{< ref "/posts/building-a-javascript-library-part-1-testing" >}}) showed how we tested our library. In this post, we'll look at how to automate repetitive tasks.
@@ -12,7 +12,7 @@ This is the second in a [series of posts]({{< ref "/posts/building-a-javascript-
 ## Task automation
 
 Developing a library is not just about writing code. We also have the following repetitive tasks:
- 
+
 - Running tests.
 - Creating a distribution version of our library.
 - Creating a minified version of our distribution file.
@@ -25,7 +25,7 @@ All these repetitive tasks can be done manually, but we'll automate them. Automa
 - They run reliably.
 - They can be scheduled.
 
-To define and run automated tasks, we'll use a tool called a task runner. At the moment, the two most popular ones are [Grunt](http://gruntjs.com/) and [Gulp](http://gulpjs.com/). Their most striking difference is that Grunt uses configuration files to define tasks and Gulp uses code. 
+To define and run automated tasks, we'll use a tool called a task runner. At the moment, the two most popular ones are [Grunt](http://gruntjs.com/) and [Gulp](http://gulpjs.com/). Their most striking difference is that Grunt uses configuration files to define tasks and Gulp uses code.
 
 Internally, Grunt works with files whereas Gulp work with streams. Using streams means that Gulp does less writing to disk and allows tasks to be [chained efficiently](http://blog.carbonfive.com/2014/05/05/roll-your-own-asset-pipeline-with-gulp/), which improves performance.
 
@@ -50,14 +50,14 @@ npm install --save-dev gulp
 Our final step is to create a `gulpfile.js` file in our project's root in which our tasks are defined:
 
 ```js
-var gulp = require('gulp');
+var gulp = require("gulp");
 
-gulp.task('default', function() {
+gulp.task("default", function () {
   // place code for your default task here
 });
 ```
 
-Here, we just define an empty task named `"default"`. 
+Here, we just define an empty task named `"default"`.
 
 To run a task, just call `gulp <taskname>`, which in our case means:
 
@@ -75,9 +75,9 @@ Now we're ready to start creating tasks.
 
 ### Running tests
 
-As you [might recall]({{< ref "/posts/building-a-javascript-library-part-1-testing" >}}), running our tests required us to open the test runner file in a web-browser. To run our tests using Gulp, being a command-line application, we need to use a *headless* browser, which is a browser without a GUI that can be run from the command-line.
+As you [might recall]({{< ref "/posts/building-a-javascript-library-part-1-testing" >}}), running our tests required us to open the test runner file in a web-browser. To run our tests using Gulp, being a command-line application, we need to use a _headless_ browser, which is a browser without a GUI that can be run from the command-line.
 
-We'll use the [PhantomJS](http://phantomjs.org/) *headless* browser using the [gulp-mocha-phantomjs](https://www.npmjs.com/package/gulp-mocha-phantomjs) plugin:
+We'll use the [PhantomJS](http://phantomjs.org/) _headless_ browser using the [gulp-mocha-phantomjs](https://www.npmjs.com/package/gulp-mocha-phantomjs) plugin:
 
 ```
 npm install gulp-mocha-phantomjs --save-dev
@@ -86,12 +86,10 @@ npm install gulp-mocha-phantomjs --save-dev
 Next, we create a `"test"` task that uses PhantomJS to open our test runner file:
 
 ```js
-var mochaPhantomJS = require('gulp-mocha-phantomjs');
+var mochaPhantomJS = require("gulp-mocha-phantomjs");
 
-gulp.task('test', function () {
-  return gulp
-    .src('runner.html')
-    .pipe(mochaPhantomJS());
+gulp.task("test", function () {
+  return gulp.src("runner.html").pipe(mochaPhantomJS());
 });
 ```
 
@@ -136,12 +134,12 @@ D:\Programming\knockout-paging>gulp test
 test failed
 ```
 
-The test task now outputs the failed assertion and an error message: `Error in plugin 'gulp-mocha-phantomjs'`. This is Gulp warning us that the `'gulp-mocha-phantomjs'` task returned an error code, which it does when one or more tests fail. 
+The test task now outputs the failed assertion and an error message: `Error in plugin 'gulp-mocha-phantomjs'`. This is Gulp warning us that the `'gulp-mocha-phantomjs'` task returned an error code, which it does when one or more tests fail.
 
 You can use this error returning feature to define tasks that only succeed when all tests pass, ideal for continuous integration scenarios. For example, we can define a `"integration"` task that depends on the `"test"` task to run successfully:
 
 ```js
-gulp.task('integration', ['test'], function() {
+gulp.task("integration", ["test"], function () {
   // This will only execute when the 'test' task is successful
 });
 ```
@@ -157,10 +155,11 @@ npm install gulp-rename --save-dev
 The actual Gulp task is quite simple:
 
 ```js
-gulp.task('dist', function () {
-  gulp.src('./index.js')
-      .pipe(plugins.rename('knockout-paging.js'))
-      .pipe(gulp.dest('./dist'));
+gulp.task("dist", function () {
+  gulp
+    .src("./index.js")
+    .pipe(plugins.rename("knockout-paging.js"))
+    .pipe(gulp.dest("./dist"));
 });
 ```
 
@@ -177,15 +176,16 @@ npm install gulp-uglify --save-dev
 Applying minification is just a matter of piping our library file to `plugins.uglify()`:
 
 ```js
-gulp.task('dist-minified', function () {
-  gulp.src('./index.js')
-      .pipe(plugins.uglify())
-      .pipe(plugins.rename('knockout-paging.min.js'))
-      .pipe(gulp.dest('./dist'));
+gulp.task("dist-minified", function () {
+  gulp
+    .src("./index.js")
+    .pipe(plugins.uglify())
+    .pipe(plugins.rename("knockout-paging.min.js"))
+    .pipe(gulp.dest("./dist"));
 });
 ```
 
-Now when we run `gulp dist-minified`, a minified version of the `index.js` file is written to `dist/knockout-paging.min.js`. Note that the `index.js` file itself is *not* modified.
+Now when we run `gulp dist-minified`, a minified version of the `index.js` file is written to `dist/knockout-paging.min.js`. Note that the `index.js` file itself is _not_ modified.
 
 With Gulp, you can chain commands. This allows us to combine the previous two tasks into a single task:
 
@@ -224,16 +224,17 @@ Then we add a placeholder for the version number in our `index.js` file's header
 To automatically replace the `"{{ "{{ version " }}}}"` placeholder with the current version number, we retrieve the version number specified in our `package.json` file and use the `replace` plugin we just installed to do the replacing:
 
 ```js
-gulp.task('dist-version', function () {
-  var pkg = require('./package.json');
+gulp.task("dist-version", function () {
+  var pkg = require("./package.json");
 
-  gulp.src('./index.js')
+  gulp
+    .src("./index.js")
     .pipe(plugins.replace('{{ "{{ version " }}}}', pkg.version))
-    .pipe(plugins.rename('knockout-paging.js'))
-    .pipe(gulp.dest('./dist'))
+    .pipe(plugins.rename("knockout-paging.js"))
+    .pipe(gulp.dest("./dist"))
     .pipe(plugins.uglify())
-    .pipe(plugins.rename('knockout-paging.min.js'))
-    .pipe(gulp.dest('./dist'));
+    .pipe(plugins.rename("knockout-paging.min.js"))
+    .pipe(gulp.dest("./dist"));
 });
 ```
 
@@ -284,14 +285,21 @@ We then define three tasks, for each of the three semver change types:
 
 ```js
 function updateVersion(importance) {
-  return gulp.src('./package.json')
+  return gulp
+    .src("./package.json")
     .pipe(plugins.bump({ type: importance }))
-    .pipe(gulp.dest('./'));
+    .pipe(gulp.dest("./"));
 }
 
-gulp.task('patch-release', function() { return updateVersion('patch'); });
-gulp.task('minor-release', function() { return updateVersion('minor'); });
-gulp.task('major-release', function() { return updateVersion('major'); });
+gulp.task("patch-release", function () {
+  return updateVersion("patch");
+});
+gulp.task("minor-release", function () {
+  return updateVersion("minor");
+});
+gulp.task("major-release", function () {
+  return updateVersion("major");
+});
 ```
 
 Now if we run `gulp major-release`, the version number in our `package.json` file will be updated according to the rules defined for major changes.
@@ -302,9 +310,10 @@ Our previous example only modified the `package.json` file, but you can also upd
 
 ```js
 function updateVersion(importance) {
-  return gulp.src(['./package.json', './bower.json'])
+  return gulp
+    .src(["./package.json", "./bower.json"])
     .pipe(plugins.bump({ type: importance }))
-    .pipe(gulp.dest('./'));
+    .pipe(gulp.dest("./"));
 }
 ```
 
@@ -312,6 +321,6 @@ This modified task updates the version in both the `package.json` and `bower.jso
 
 ## Conclusion
 
-Usually, maintaining a library means doing repetitive tasks, like minifying files or running tests. For our library, we automated these tasks using Gulp. Defining these tasks was easy, as we could just use already available tasks. Automating our tasks not only saved us time, but also prevented us from making mistakes. 
+Usually, maintaining a library means doing repetitive tasks, like minifying files or running tests. For our library, we automated these tasks using Gulp. Defining these tasks was easy, as we could just use already available tasks. Automating our tasks not only saved us time, but also prevented us from making mistakes.
 
 In the [next post]({{< ref "/posts/building-a-javascript-library-part-3-open-sourcing" >}}), we'll look at how we open-source our code.

@@ -1,34 +1,34 @@
 ---
 title: "Continuous integration of .NET Core applications"
 date: 2017-03-21
-tags: 
-  - C#
-  - .NET
-  - Continuous Integration
+tags:
+  - csharp
+  - dotnet
+  - continuous-integration
 url: /2017/03/21/continuous-integration-of-dotnet-core-applications/
 ---
 
 On March 7, 2017, the [.NET Core SDK](https://www.microsoft.com/net/download/core) was released. It consists of two parts: the [.NET Core runtime](https://docs.microsoft.com/en-us/dotnet/articles/core/) and the [.NET CLI](https://docs.microsoft.com/en-us/dotnet/articles/core/tools/). The runtime allows you to run .NET Core applications, whereas the CLI is a command-line interface that allows you to develop .NET Core applications.
 
-In this blog post, we'll see how we can use the .NET CLI to build a small .NET Core console application. We then show how easy it is to setup a continuous integration pipeline using AppVeyor, Travis and CircleCI. 
+In this blog post, we'll see how we can use the .NET CLI to build a small .NET Core console application. We then show how easy it is to setup a continuous integration pipeline using AppVeyor, Travis and CircleCI.
 
 Note: we will assume that we already have an existing account for AppVeyor, Travis and CircleCI.
 
 ## Installing the .NET Core SDK
 
-Our first step is to install the .NET Core SDK. This is surprisingly simple. Just go to the [download](https://www.microsoft.com/net/download/core) page and follow the on-screen instructions. 
+Our first step is to install the .NET Core SDK. This is surprisingly simple. Just go to the [download](https://www.microsoft.com/net/download/core) page and follow the on-screen instructions.
 
 Once the installation has completed, open a command prompt and run:
 
- ```bash
- dotnet --version
- ```
- 
+```bash
+dotnet --version
+```
+
 If the installation was successful, the .NET CLI's version number will be displayed, which for me was:
- 
- ```bash
- 1.0.1
- ```
+
+```bash
+1.0.1
+```
 
 ## Creating the application
 
@@ -73,10 +73,10 @@ Restoring packages for /Users/erikschierboom/Programming/dotnetcore-ci/dotnetcor
   Generating MSBuild file /Users/erikschierboom/Programming/dotnetcore-ci/obj/dotnetcore-ci.csproj.nuget.g.targets.
   Writing lock file to disk. Path: /Users/erikschierboom/Programming/dotnetcore-ci/obj/project.assets.json
   Restore completed in 841.1 ms for /Users/erikschierboom/Programming/dotnetcore-ci/dotnetcore-ci.csproj.
-  
+
   NuGet Config files used:
       /Users/erikschierboom/.nuget/NuGet/NuGet.Config
-  
+
   Feeds used:
       https://api.nuget.org/v3/index.json
 ```
@@ -112,9 +112,9 @@ Our application will now be run (using the .NET Core runtime) and will output a 
 
 ```bash
 Hello World!
-``` 
+```
 
-The output may not be that exciting, but what *is* exciting is that we scaffolded, restored, built *and* ran our application using just the .NET CLI! No IDE was involved! Additionally, we did all this on our MacBook, showing the fully cross-platform nature of the .NET CLI.
+The output may not be that exciting, but what _is_ exciting is that we scaffolded, restored, built _and_ ran our application using just the .NET CLI! No IDE was involved! Additionally, we did all this on our MacBook, showing the fully cross-platform nature of the .NET CLI.
 
 ## Building on a continuous integration server
 
@@ -122,7 +122,7 @@ Now that we have our software building locally, let's try to setup a continuous 
 
 ### AppVeyor
 
-The first CI server we'll look at is [AppVeyor](https://www.appveyor.com/), which is a CI server that runs on Windows. 
+The first CI server we'll look at is [AppVeyor](https://www.appveyor.com/), which is a CI server that runs on Windows.
 
 To configure our application, we add an `appveyor.yml` file to our root directory. Its contents are very simple:
 
@@ -135,7 +135,7 @@ before_build:
   - cmd: dotnet restore
 ```
 
-In the first line, we specify that we want to use the Visual Studio 2017 image, which is the AppVeyor image that has the .NET Core SDK pre-installed. 
+In the first line, we specify that we want to use the Visual Studio 2017 image, which is the AppVeyor image that has the .NET Core SDK pre-installed.
 
 Next, we set two environment variables:
 
@@ -197,9 +197,9 @@ script:
   - dotnet build
 ```
 
-This config file has a bit more going on, but nothing complicated. First, we define the language we'll be using, C# in our case. Next, we define the Linux distro it runs on, for which we'll use Ubunty trusty. 
+This config file has a bit more going on, but nothing complicated. First, we define the language we'll be using, C# in our case. Next, we define the Linux distro it runs on, for which we'll use Ubunty trusty.
 
-We then get to the .NET specific bits, in which we indicate that we want version 1.0.1 of the .NET Core SDK to be installed. We also explicitly specify that we don't require Mono, which would otherwise be automatically installed due to the language specified being `csharp`. 
+We then get to the .NET specific bits, in which we indicate that we want version 1.0.1 of the .NET Core SDK to be installed. We also explicitly specify that we don't require Mono, which would otherwise be automatically installed due to the language specified being `csharp`.
 
 Once again, we specify the two .NET CLI specific environment variables.
 
@@ -211,7 +211,7 @@ The Travis output log will look like this:
 Installing .NET Core
 ..
 
-git clone --depth=50 --branch=master https://github.com/ErikSchierboom/dotnetcore-ci.git 
+git clone --depth=50 --branch=master https://github.com/ErikSchierboom/dotnetcore-ci.git
 ...
 
 Setting environment variables from .travis.yml
@@ -241,7 +241,7 @@ The output is very similar to AppVeyor, with only minor differences. Our continu
 
 ### CircleCI
 
-The last CI server we'll look at is [CircleCI](https://circleci.com), which is also Linux-based. 
+The last CI server we'll look at is [CircleCI](https://circleci.com), which is also Linux-based.
 
 Once again, configuration is done by adding a file to the root directory, this time named `circle.yml`:
 
@@ -261,7 +261,7 @@ jobs:
       - run: dotnet build
 ```
 
-In the first line, we specify that we want to use version 2 of CircleCI, which is currently in beta. With version 2, builds are based on Docker images. That allows us to use the official .NET Core SDK [Docker image](https://store.docker.com/images/6c038a68-be47-4d7e-bfd2-33a6fe75b9ac?tab=description) to build our application. 
+In the first line, we specify that we want to use version 2 of CircleCI, which is currently in beta. With version 2, builds are based on Docker images. That allows us to use the official .NET Core SDK [Docker image](https://store.docker.com/images/6c038a68-be47-4d7e-bfd2-33a6fe75b9ac?tab=description) to build our application.
 
 Once again, we also set the .NET CLI environment variables.
 
@@ -305,13 +305,13 @@ Build succeeded.
     0 Error(s)
 
 Time Elapsed 00:00:01.94
-```  
+```
 
 ## Conclusion
 
-Creating, building and running a .NET Core application using the .NET CLI is incredibly easy. It it also quite convenient, as it is cross-platform and you can build your application using the same CLI both locally and remotely. 
+Creating, building and running a .NET Core application using the .NET CLI is incredibly easy. It it also quite convenient, as it is cross-platform and you can build your application using the same CLI both locally and remotely.
 
-We used the CLI locally to create a simple .NET Core console application. We then used the CLI remotely to setup three continuous integration servers, AppVeyor, Travis and CircleCI, to build our application. 
+We used the CLI locally to create a simple .NET Core console application. We then used the CLI remotely to setup three continuous integration servers, AppVeyor, Travis and CircleCI, to build our application.
 
 Configuring the CI servers was very simple: they all required only a single, simple YAML configuration file to be added to the root of our project.
 

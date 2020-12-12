@@ -1,29 +1,29 @@
 ---
 title: "Building a JavaScript library - part 6: TypeScript"
 date: 2015-11-04
-tags: 
-  - JavaScript
-  - Knockout
-  - TypeScript
+tags:
+  - javascript
+  - knockout
+  - typescript
 ---
 
 This is the sixth in a [series of posts]({{< ref "/posts/building-a-javascript-library" >}}) that discuss the steps taken to publish our library. In our [previous post]({{< ref "/posts/building-a-javascript-library-part-5-build-server" >}}), we used build servers to automatically build and test our software. This post will show how we added TypeScript support to our library.
 
 ## TypeScript
 
-The [TypeScript](http://www.typescriptlang.org/) language is a typed superset of JavaScript that adds features like modules, classes and interfaces. The great thing of it being a JavaScript superset is that any JavaScript code is also valid TypeScript code! This allows you to gradually introduce TypeScript-specific features to your existing JavaScript code. 
+The [TypeScript](http://www.typescriptlang.org/) language is a typed superset of JavaScript that adds features like modules, classes and interfaces. The great thing of it being a JavaScript superset is that any JavaScript code is also valid TypeScript code! This allows you to gradually introduce TypeScript-specific features to your existing JavaScript code.
 
 Let's look at some TypeScript code:
 
 ```javascript
 class Greeter {
-    greeting: string;
-    constructor(message: string) {
-        this.greeting = message;
-    }
-    greet() {
-        return "Hello, " + this.greeting;
-    }
+  greeting: string;
+  constructor(message: string) {
+    this.greeting = message;
+  }
+  greet() {
+    return "Hello, " + this.greeting;
+  }
 }
 
 var greeter = new Greeter("world");
@@ -34,13 +34,13 @@ As can be seen, TypeScript allows us to use features like classes and constructo
 
 ```javascript
 var Greeter = (function () {
-    function Greeter(message) {
-        this.greeting = message;
-    }
-    Greeter.prototype.greet = function () {
-        return "Hello, " + this.greeting;
-    };
-    return Greeter;
+  function Greeter(message) {
+    this.greeting = message;
+  }
+  Greeter.prototype.greet = function () {
+    return "Hello, " + this.greeting;
+  };
+  return Greeter;
 })();
 var greeter = new Greeter("world");
 alert(greeter.greet());
@@ -58,7 +58,7 @@ Regardless of your stance on dynamic vs. static typing, the latter has some bene
 2. You can (more) safely refactor code.
 3. Tooling can easily support code-completion.
 
-You might not miss these features in small projects, but in large projects they can greatly enhance productivity. That is why the Angular team chose to write Angular 2 [completely in TypeScript](http://blogs.msdn.com/b/typescript/archive/2015/03/05/angular-2-0-built-on-typescript.aspx). 
+You might not miss these features in small projects, but in large projects they can greatly enhance productivity. That is why the Angular team chose to write Angular 2 [completely in TypeScript](http://blogs.msdn.com/b/typescript/archive/2015/03/05/angular-2-0-built-on-typescript.aspx).
 
 ## Declaration files
 
@@ -68,14 +68,14 @@ A declaration file is a TypeScript file, but with only types and variable defini
 
 ```javascript
 var Rectangle = (function () {
-    function Rectangle(width, height) {
-        this.width = width;
-        this.height = height;
-    }
-    Rectangle.prototype.createSquare = function (size) {
-        return new Rectangle(size, size);
-    };
-    return Rectangle;
+  function Rectangle(width, height) {
+    this.width = width;
+    this.height = height;
+  }
+  Rectangle.prototype.createSquare = function (size) {
+    return new Rectangle(size, size);
+  };
+  return Rectangle;
 })();
 ```
 
@@ -85,12 +85,12 @@ We could use this code from TypeScript as is, but we wouldn't have any type info
 class Rectangle {
   width: number;
   height: number;
-  
+
   constructor(width: number, height: number) {
     this.width = width;
     this.height = height;
   }
-  
+
   createSquare(size: number) {
     return new Rectangle(size, size);
   }
@@ -109,24 +109,24 @@ We are now ready to define our declaration file. First, we'll define an interfac
 /// <reference path="knockout.d.ts" />
 
 interface KnockoutPagedObservableArray<T> extends KnockoutObservableArray<T> {
-    pageSize: KnockoutObservable<number>;
-    pageNumber: KnockoutObservable<number>;
+  pageSize: KnockoutObservable<number>;
+  pageNumber: KnockoutObservable<number>;
 
-    pageItems: KnockoutComputed<T[]>;
-    pageCount: KnockoutComputed<number>;
-    itemCount: KnockoutComputed<number>;
-    firstItemOnPage: KnockoutComputed<number>;
-    lastItemOnPage: KnockoutComputed<number>;
-    hasPreviousPage: KnockoutComputed<boolean>;
-    hasNextPage: KnockoutComputed<boolean>;
-    isFirstPage: KnockoutComputed<boolean>;
-    isLastPage: KnockoutComputed<boolean>;
-    pages: KnockoutComputed<number[]>;
+  pageItems: KnockoutComputed<T[]>;
+  pageCount: KnockoutComputed<number>;
+  itemCount: KnockoutComputed<number>;
+  firstItemOnPage: KnockoutComputed<number>;
+  lastItemOnPage: KnockoutComputed<number>;
+  hasPreviousPage: KnockoutComputed<boolean>;
+  hasNextPage: KnockoutComputed<boolean>;
+  isFirstPage: KnockoutComputed<boolean>;
+  isLastPage: KnockoutComputed<boolean>;
+  pages: KnockoutComputed<number[]>;
 
-    toNextPage(): void;
-    toPreviousPage(): void;
-    toLastPage(): void;
-    toFirstPage(): void;
+  toNextPage(): void;
+  toPreviousPage(): void;
+  toLastPage(): void;
+  toFirstPage(): void;
 }
 ```
 
@@ -136,14 +136,16 @@ To define our `ko.pagedObservableArray()` function, we'll have to extend the exi
 
 ```js
 interface KnockoutStatic {
-  pagedObservableArray<T>(value?: T[], options?: KnockoutPagedOptions): 
-    KnockoutPagedObservableArray<T>;
+  pagedObservableArray<T>(
+    value?: T[],
+    options?: KnockoutPagedOptions
+  ): KnockoutPagedObservableArray<T>;
 }
 
 interface KnockoutPagedOptions {
-    pageSize?: number;
-    pageNumber?: number;
-    pageGenerator?: string;
+  pageSize?: number;
+  pageNumber?: number;
+  pageGenerator?: string;
 }
 ```
 
@@ -158,21 +160,21 @@ To test our declaration file, we can create a new TypeScript files that referenc
 
 // Different option formats
 var emptyOptions = {};
-var allOptions   = { 
-  pageNumber: 2, 
-  pageSize: 10, 
-  pageGenerator: 'sliding' 
+var allOptions = {
+  pageNumber: 2,
+  pageSize: 10,
+  pageGenerator: "sliding",
 };
 
 function pagedObservableArray() {
-  var simple       = ko.pagedObservableArray();
+  var simple = ko.pagedObservableArray();
   var emptyOptions = ko.pagedObservableArray([1, 2, 3], emptyOptions);
-  var allOptions   = ko.pagedObservableArray([1, 2, 3], allOptions);
+  var allOptions = ko.pagedObservableArray([1, 2, 3], allOptions);
 }
 
 function observables() {
   var paged = ko.pagedObservableArray([]);
-  var pageSize   = paged.pageSize();
+  var pageSize = paged.pageSize();
   var pageNumber = paged.pageNumber();
 }
 
@@ -196,7 +198,7 @@ Note that for brevity, we left out some tests.
 
 ## Including the declaration file
 
-To make our declaration file available, we simply add it to our repository. People can then use it by referencing it from their TypeScript code. 
+To make our declaration file available, we simply add it to our repository. People can then use it by referencing it from their TypeScript code.
 
 Starting from version 1.6, the TypeScript compiler can [automatically load declaration files](https://github.com/Microsoft/TypeScript/wiki/Typings-for-npm-packages) (without explicitly referencing them). To support this, we'll add a `"typings"` property to our `package.json` file:
 
@@ -210,11 +212,11 @@ The declaration file will now automatically be picked up by the TypeScript compi
 
 An alternative place where people look for declaration files is the [DefinitelyTyped repository](https://github.com/borisyankov/DefinitelyTyped). This repository contains many declaration files, but mostly for libraries that don't provide a declaration file themselves.
 
-Although our library' *does* provide a declaration file, it's not a bad idea to also submit it to DefinitelyTyped. To do so, we just follow the [contribution guidelines](http://definitelytyped.org/guides/contributing.html):
+Although our library' _does_ provide a declaration file, it's not a bad idea to also submit it to DefinitelyTyped. To do so, we just follow the [contribution guidelines](http://definitelytyped.org/guides/contributing.html):
 
 1. We [fork](https://help.github.com/articles/fork-a-repo/) the [DefinitelyTyped repository](https://github.com/borisyankov/DefinitelyTyped).
-2. In the fork, we create a folder with our library's name. 
-3. We add the declaration- and tests file to that folder. 
+2. In the fork, we create a folder with our library's name.
+3. We add the declaration- and tests file to that folder.
 4. We compile our tests file to see if everything is valid.
 5. We commit our changes and submit a [pull request](https://help.github.com/articles/using-pull-requests/).
 
@@ -255,7 +257,7 @@ When TSD executes a command, it modifies the `tsd.json` file. This file contains
 }
 ```
 
-The most important part is the  `"installed"` section, which lists all installed declaration files. This allows TSD to install all typings file the project depends on just by examining the `tsd.json` file, similar to how the `dependencies` section in a `package.json` file is used by NPM to install any dependencies.
+The most important part is the `"installed"` section, which lists all installed declaration files. This allows TSD to install all typings file the project depends on just by examining the `tsd.json` file, similar to how the `dependencies` section in a `package.json` file is used by NPM to install any dependencies.
 
 ## Conclusion
 

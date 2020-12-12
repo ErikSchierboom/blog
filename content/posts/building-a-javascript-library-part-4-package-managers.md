@@ -1,10 +1,10 @@
 ---
 title: "Building a JavaScript library - part 4: package managers"
 date: 2015-10-05
-tags: 
-  - JavaScript
-  - Knockout
-  - Package manager
+tags:
+  - javascript
+  - knockout
+  - package-manager
 ---
 
 This is the fourth in a [series of posts]({{< ref "/posts/building-a-javascript-library" >}}) that discuss the steps taken to publish our library. Our [previous post]({{< ref "/posts/building-a-javascript-library-part-3-open-sourcing" >}}) went into detail on how we open-sourced our library. This post describes how we added support for package managers.
@@ -22,7 +22,7 @@ When building software, you'll likely use (and thus depend on) software built by
 
 This might not seem that bad, but what if you have many dependencies or want to upgrade to a newer version? You'd have to repeat the previous steps for each dependency, which is both tedious and error prone.
 
-A package manager can help you manage your software dependencies (also referred to as *packages*). It allows you to:
+A package manager can help you manage your software dependencies (also referred to as _packages_). It allows you to:
 
 - Search for packages.
 - Install and uninstall packages.
@@ -69,21 +69,16 @@ There are [many more fields](https://docs.npmjs.com/files/package.json) you can 
   "version": "0.2.1",
   "description": "Adds paging functionality to Knockout.",
   "main": "dist/knockout-paging.js",
-  "files": [
-    "LICENSE",
-    "README.md",
-    "index.js",
-    "dist"
-  ],
-  "repository": { 
-    "type": "git", 
-    "url": "git@github.com/ErikSchierboom/knockout-paging.git" 
+  "files": ["LICENSE", "README.md", "index.js", "dist"],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com/ErikSchierboom/knockout-paging.git"
   },
-  "keywords": [ "knockout", "paging" ],
+  "keywords": ["knockout", "paging"],
   "author": "Erik Schierboom",
   "license": "Apache",
-  "bugs": { 
-    "url": "https://github.com/ErikSchierboom/knockout-paging/issues" 
+  "bugs": {
+    "url": "https://github.com/ErikSchierboom/knockout-paging/issues"
   },
   "homepage": "https://github.com/ErikSchierboom/knockout-paging"
 }
@@ -107,7 +102,7 @@ Then we navigate to the project's root (where the `package.json` file is stored)
 npm publish
 ```
 
-This command parses the `package.json` file and submits its metadata to NPM. And that's all! Our library has now been published and has its own [page at NPMJS.com](https://www.npmjs.com/package/knockout-paging). 
+This command parses the `package.json` file and submits its metadata to NPM. And that's all! Our library has now been published and has its own [page at NPMJS.com](https://www.npmjs.com/package/knockout-paging).
 
 #### Installing
 
@@ -178,7 +173,7 @@ npm install knockout-paging@0.0.1
 
 The second package manager we'll be supporting is [Bower](http://bower.io), which is a bit different from NPM. Whereas NPM is primarily used to distribute software, Bower is often also used to distribute images, CSS and such.
 
-For our library, we'll use Bower to distribute software, like we did with NPM. We start by creating a file in our project's root named `bower.json`. 
+For our library, we'll use Bower to distribute software, like we did with NPM. We start by creating a file in our project's root named `bower.json`.
 
 A minimal `bower.json` file only contains the name of the library:
 
@@ -195,14 +190,11 @@ Once again, there are [many more fields](https://github.com/bower/bower.json-spe
   "name": "knockout-paging",
   "main": "dist/knockout-paging.js",
   "homepage": "https://github.com/ErikSchierboom/knockout-paging",
-  "authors": [ "Erik Schierboom" ],
+  "authors": ["Erik Schierboom"],
   "description": "Adds paging functionality to Knockout.",
-  "keywords": [ "knockout", "foreach", "paging" ],
+  "keywords": ["knockout", "foreach", "paging"],
   "license": "Apache",
-  "ignore": [
-    "*",
-    "!dist/*"
-  ],
+  "ignore": ["*", "!dist/*"],
   "dependencies": {
     "knockout": "^3.2.0"
   }
@@ -333,7 +325,7 @@ git push
 git push origin 0.0.2
 ```
 
-Now, when someone tries to install the `knockout-paging` package using Bower, it will automatically install version `0.0.2`. 
+Now, when someone tries to install the `knockout-paging` package using Bower, it will automatically install version `0.0.2`.
 
 Note that you can also explicitly specify the version Bower should install using `<package>#<version>`:
 
@@ -343,7 +335,7 @@ bower install knockout-paging#0.0.1
 
 ### JSPM
 
-The third and last package manager we'll add support for is [JSPM](http://jspm.io/), which is the *new kid on the block*. JSPM is a package manager for the [SystemJS universal module loader](https://github.com/systemjs/systemjs), which can load AMD, CommonJS, ES6 or global modules. 
+The third and last package manager we'll add support for is [JSPM](http://jspm.io/), which is the _new kid on the block_. JSPM is a package manager for the [SystemJS universal module loader](https://github.com/systemjs/systemjs), which can load AMD, CommonJS, ES6 or global modules.
 
 #### Submitting
 
@@ -364,7 +356,7 @@ To indicates that we want JSPM to use the NPM registry for our library, which is
 
 To allow JSPM to use these fields, we must publish new versions of our library, that include the changed `package.json` file, to NPM and GitHub.
 
-Having done that, the final step is to add our library to the [JSPM registry](http://kasperlewau.github.io/registry/). This is done by adding our library to the [`registry.json`](https://github.com/jspm/registry/blob/master/registry.json) file in the [JSPM repository](https://github.com/jspm/registry). 
+Having done that, the final step is to add our library to the [JSPM registry](http://kasperlewau.github.io/registry/). This is done by adding our library to the [`registry.json`](https://github.com/jspm/registry/blob/master/registry.json) file in the [JSPM repository](https://github.com/jspm/registry).
 
 To do so, first we [fork the JSPM repository](https://github.com/ErikSchierboom/registry). Next, we'll clone our fork to our local machine. There, we'll modify the `registry.json` file to define a JSPM package for our library:
 

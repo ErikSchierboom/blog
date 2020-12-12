@@ -1,24 +1,24 @@
 ---
 title: "Building a JavaScript library - part 3: open-sourcing"
 date: 2015-08-22
-tags: 
-  - JavaScript
-  - Knockout
-  - Open-source
+tags:
+  - javascript
+  - knockout
+  - open-source
 ---
 
 This is the third in a [series of posts]({{< ref "/posts/building-a-javascript-library" >}}) that discuss the steps taken to publish our library. Our [previous post]({{< ref "/posts/building-a-javascript-library-part-2-automation" >}}) showed how we automated repetitive tasks. This post describes how we open-sourced our library.
 
 ## Why open-source?
 
-Before we'll describe *how* we made our library open-source, let's first ask: *why* ? What exactly are the benefits of making code open-source?
+Before we'll describe _how_ we made our library open-source, let's first ask: _why_ ? What exactly are the benefits of making code open-source?
 
 As it turns out, open-sourcing code has several advantages:
 
 - You don't have to do everything yourself. People all over the world can contribute (e.g. [node.js](https://github.com/nodejs/node) has over 700 contributors). This means the software can be developed faster and cheaper.
 - You benefit from the knowledge of others. They will find bugs you didn't and come up with new ideas. Furthermore, they will help you improve your code, making you a better programmer.
 - Your code becomes part of your CV. Not only does it demonstrate your skills as a programmer, it also implies you are passionate about developing software. Recruiters also actively scan open-source projects for potential candidates.
-- You use open-source software everyday (even without knowing it), why not give back to the community? It is the right thing to do. 
+- You use open-source software everyday (even without knowing it), why not give back to the community? It is the right thing to do.
 - It forces you to think on how to setup your project. If the code is difficult to work with or hard to build, you won't find many people helping you.
 - It is fun! Collaboratively developing software is one of my greatest joys in programming.
 
@@ -35,9 +35,9 @@ We feel the advantages overwhelmingly outweigh the disadvantages, which is why w
 
 Before we'll actually open-source our code, there are some things left to do.
 
-### Write documentation 
+### Write documentation
 
-Although open-source code allows people to inspect the code to find out how it works, you *should* still write documentation. If you are not convinced of the benefits of writing documentation, try using a new library without reading any of its documentation. ;)
+Although open-source code allows people to inspect the code to find out how it works, you _should_ still write documentation. If you are not convinced of the benefits of writing documentation, try using a new library without reading any of its documentation. ;)
 
 The documentation should at least specify:
 
@@ -50,7 +50,7 @@ For open-source projects, the documentation should also contain:
 - The license the code is released under.
 - A description on how people can contribute.
 
-A `README` file containing this minimal documentation should be stored alongside your source code for easy access. Note that this documentation file should be relatively small, people should be able to read it quickly. 
+A `README` file containing this minimal documentation should be stored alongside your source code for easy access. Note that this documentation file should be relatively small, people should be able to read it quickly.
 
 #### Separate documentation website
 
@@ -84,11 +84,11 @@ You can find a comprehensive list of "Fiddle" sites at [fiddles.io](https://fidd
 
 ### Choosing a license
 
-When code is open-source, it is important for other people to know what they are allowed to do with it. This is defined by a license. If you need help choosing a license, check out [choosealicense.com](http://choosealicense.com/). 
+When code is open-source, it is important for other people to know what they are allowed to do with it. This is defined by a license. If you need help choosing a license, check out [choosealicense.com](http://choosealicense.com/).
 
-For our library, we chose the [Apache 2 license](http://choosealicense.com/licenses/apache-2.0/), which lets other people freely use our code. The main difference with the popular [MIT license](http://choosealicense.com/licenses/mit/) is that the Apache license has better protection against patent issues. You should probably also choose the Apache license if you want to [raise venture capital](http://tomtunguz.com/open-source-exits-by-license/). 
+For our library, we chose the [Apache 2 license](http://choosealicense.com/licenses/apache-2.0/), which lets other people freely use our code. The main difference with the popular [MIT license](http://choosealicense.com/licenses/mit/) is that the Apache license has better protection against patent issues. You should probably also choose the Apache license if you want to [raise venture capital](http://tomtunguz.com/open-source-exits-by-license/).
 
- You should mention the license in both your source code and the `README` file, as well as include it in a separate [LICENSE](https://github.com/ErikSchierboom/knockout-paging/blob/master/LICENSE) file.
+You should mention the license in both your source code and the `README` file, as well as include it in a separate [LICENSE](https://github.com/ErikSchierboom/knockout-paging/blob/master/LICENSE) file.
 
 ### Cleaning up
 
@@ -100,7 +100,7 @@ Having cleaned-up code is also in your best interest, as people are less likely 
 
 As part of the clean-up, please make sure that your code does not contain sensitive data like SSH keys or passwords. Even though GitHub has a page dedicated to [dealing with sensitive data](https://help.github.com/articles/remove-sensitive-data/), a simple [GitHub search](https://github.com/search?p=2&q=rackspace_api_key&ref=searchresults&type=Code) shows that many repositories still contain sensitive data.
 
-Due to the distributed nature of open-source software (anyone could have a copy of your code), published sensitive data *must* be considered compromised, so make sure to remove sensitive data from your code *before* open-sourcing it.
+Due to the distributed nature of open-source software (anyone could have a copy of your code), published sensitive data _must_ be considered compromised, so make sure to remove sensitive data from your code _before_ open-sourcing it.
 
 ### Hosting
 
@@ -114,7 +114,7 @@ Our last task is to decide where to host our code. As we use [Git](https://git-s
 Hosting open-source code is completely free on all four websites. We chose GitHub mainly for its great collaboration options:
 
 - Contributing code through through [pull-requests](https://help.github.com/articles/using-pull-requests/).
-- Keeping track of issues through the built-in [issue tracker](https://help.github.com/articles/about-issues/). 
+- Keeping track of issues through the built-in [issue tracker](https://help.github.com/articles/about-issues/).
 
 There are other benefits of using GitHub:
 

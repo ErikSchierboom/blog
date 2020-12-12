@@ -1,16 +1,17 @@
 ---
 title: "Fluent interfaces"
 date: 2014-10-08
-tags: 
-  - C#
-  - .NET
-  - Fluent interfaces
+tags:
+  - csharp
+  - dotnet
+  - fluent-interfaces
 ---
 
-Fluent interfaces are software API's designed to be readable and to *flow*. They are like a miniature [domain-specific language](http://en.wikipedia.org/wiki/Domain-specific_language), code structured for one specific purpose.
+Fluent interfaces are software API's designed to be readable and to _flow_. They are like a miniature [domain-specific language](http://en.wikipedia.org/wiki/Domain-specific_language), code structured for one specific purpose.
 
 ## Flow
-Methods in fluent interfaces can often be chained, creating a *flow* of method calls. To allow a method to be chained, there is but one rule:
+
+Methods in fluent interfaces can often be chained, creating a _flow_ of method calls. To allow a method to be chained, there is but one rule:
 
 > The method must return a non-void value.
 
@@ -85,15 +86,16 @@ flowing.Log("line 1")
 ```
 
 ### More complex flows
+
 Some API's require a more complex flow, for example to build-up a complex structure. An example of this is a SQL query. A minimal SQL query has two required parts:
 
-* The `SELECT` statement, indicating which column values to return.
-* The `FROM` statement, specifying the tables from which the results are returned.
+- The `SELECT` statement, indicating which column values to return.
+- The `FROM` statement, specifying the tables from which the results are returned.
 
 However, an SQL query also has two other, optional parts:
 
-* The `WHERE` statement, which determines the filtering to apply.
-* The `ORDER BY` statement, which specifies how to order the results.
+- The `WHERE` statement, which determines the filtering to apply.
+- The `ORDER BY` statement, which specifies how to order the results.
 
 A basic fluent API designed to meet these criteria could look like this:
 
@@ -232,6 +234,7 @@ public interface IOrderByQuery : IExecutableQuery
 ```
 
 We have now ensured that all states except the `SELECT` state can be executed:
+
 ```csharp
 // Valid calls
 fromQuery.Execute();
@@ -262,13 +265,15 @@ Query.Select("*")
      .Where("name = 'Shaq'")
      .OrderBy("age")
      .Execute();
- ```
+```
 
 ## Readability
+
 When designing fluent interfaces, it is very important to design for readability. Here are some examples.
 
 ### Getters and setters
-Take the following class with two flowing *setter* methods:
+
+Take the following class with two flowing _setter_ methods:
 
 ```csharp
 public class Player
@@ -342,6 +347,7 @@ PropertiesPlayer player = new PropertiesPlayer { Name = "LeBron James", Age = 27
 This looks good from a readability viewpoint, but limits your flow options as the type returned from the getters and setters cannot be different from the property type.
 
 ### Higher level functions
+
 Sometimes, a class has several lower level properties or functions that are often modified together. In those cases, readability can be improved by providing higher level abstractions. Take the following example:
 
 ```csharp
@@ -375,7 +381,7 @@ window.IsTranslucent = true;
 // Forgot to set the opacity percentage!
 ```
 
- The following example does a much better job of explaining what the class can do:
+The following example does a much better job of explaining what the class can do:
 
 ```csharp
 public class Window
@@ -395,7 +401,7 @@ public class Window
         this.Opacity = opacity;
     }
 }
-```    
+```
 
 This class shows its capabilities better and prevents the mistake mentioned earlier:
 
@@ -410,7 +416,8 @@ window.MakeTransparent(50);
 ```
 
 ### Pre-populated fields
-In some cases, you can expect your code to be often called with a specific set of parameters. In this case, it can be convenient to provide a pre-populated instance with that set of parameters. 
+
+In some cases, you can expect your code to be often called with a specific set of parameters. In this case, it can be convenient to provide a pre-populated instance with that set of parameters.
 
 Consider the following class to filter a population:
 
@@ -427,10 +434,10 @@ If you know that users of your API will often filter out [toddlers](http://en.wi
 ```csharp
 public class PopulationFilter
 {
-    public static PopulationFilter Toddlers = new PopulationFilter 
-                                                    { 
-                                                        MinimumAge = 1, 
-                                                        MaximumAge = 2 
+    public static PopulationFilter Toddlers = new PopulationFilter
+                                                    {
+                                                        MinimumAge = 1,
+                                                        MaximumAge = 2
                                                     };
 
     public int MinimumAge { get; set; }
@@ -440,12 +447,13 @@ public class PopulationFilter
 
 Users can now easily filter on toddlers using `PopulationFilter.Toddlers`.
 
-These examples show that simple refactorings can greatly influence readability. When developing a fluent API, one should try different API designs to find the one with the best readability. 
+These examples show that simple refactorings can greatly influence readability. When developing a fluent API, one should try different API designs to find the one with the best readability.
 
 ## Creating a fluent API
+
 With all that we now know about designing fluent API's, let's try to create one from scratch. Our goal is to create an image processor that can do some basic image transformations and save the result to a file.
 
-Often, it is best to start with writing code how you'd *want* to be calling the fluent API. Experiment with different options to see what works best. 
+Often, it is best to start with writing code how you'd _want_ to be calling the fluent API. Experiment with different options to see what works best.
 
 Say we came up with this design:
 
@@ -683,9 +691,10 @@ public class Scale
 ```
 
 ### Code complexity
+
 The amount of code in this example shows that fluent API's often need quite a lot of code. This is in part due to us implementing the API in C#. The Objective-C language, for example, requires parameter names to always be explicitly passed. This is ideal for fluent API's, as function calls are thus more explicit and you have less need of factory methods to make things explicit.
 
-In C#, you can also pass parameters by name. If we were to take advantage of this feature, we could rewrite our `Rotate()` method to: 
+In C#, you can also pass parameters by name. If we were to take advantage of this feature, we could rewrite our `Rotate()` method to:
 
 ```csharp
 public ImageProcessor Rotate(float angle)
@@ -718,6 +727,7 @@ ImageProcessor.FromFile(@"c:\input.png")
 The design of a fluent API is thus also influenced by the language used.
 
 ## Examples
+
 If you are designing a fluent API, it is useful to look at existing fluent API designs. Here are some good examples:
 
 #### jQuery
@@ -741,10 +751,11 @@ Enumerable.Range(1, 5)
 
 ```java
 expect(mock.voteForRemoval("Document"))
-  .andReturn(42).times(3) 
-  .andThrow(new RuntimeException(), 4) 
+  .andReturn(42).times(3)
+  .andThrow(new RuntimeException(), 4)
   .andReturn(-42);
 ```
 
 ## Conclusion
+
 Designing a good fluent API is not as easy as simply returning `this` from your methods. Readability is a key aspect of fluent API's and that requires you to pay attention to how you name and structure your code. Implementing a fluent API will also most likely increase the complexity of your code. However, when properly designed, fluent API's have great discoverability and improve the readability of the code.

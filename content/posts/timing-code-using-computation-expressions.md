@@ -2,8 +2,8 @@
 title: Timing code using computation expressions
 date: 2020-12-10
 tags:
-  - F#
-  - Computation expressions
+  - fsharp
+  - computation-expressions
 ---
 
 While building a link checking tool, I wanted to log the time it took to check a link. For demonstration purposes, we'll define the link checking function as follows:

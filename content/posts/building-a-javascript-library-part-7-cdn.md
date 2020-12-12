@@ -1,10 +1,10 @@
 ---
 title: "Building a JavaScript library - part 7: CDN"
 date: 2015-11-07
-tags: 
-  - JavaScript
-  - Knockout
-  - CDN
+tags:
+  - javascript
+  - knockout
+  - cdn
 ---
 
 This is the seventh and last in a [series of posts]({{< ref "/posts/building-a-javascript-library" >}}) that discuss the steps taken to publish our library. In our [previous post]({{< ref "/posts/building-a-javascript-library-part-6-typescript" >}}), we added TypeScript support to our library. This post will show how we added our library to a Content Delivery Network.
@@ -13,7 +13,7 @@ This is the seventh and last in a [series of posts]({{< ref "/posts/building-a-j
 
 A Content Delivery Network (CDN) is a network of servers that deliver content based on the geographic location of the user. In other words, when you request content from a CDN, the server geographically nearest to you will send the content. The main advantage of this is speed, but another is reliability. If one server goes down, another will automatically take over. Another advantage is that your own servers use less bandwith, very useful to cut down on bandwidth costs.
 
-Some well-known CDN providers are [Akamai](https://www.akamai.com/us/en/media-and-delivery.jsp), [CloudFlare](https://www.cloudflare.com/features-cdn/) and [Amazon CloudFront](https://aws.amazon.com/cloudfront/). While most CDN providers are paid services, some offer basic functionality for free. 
+Some well-known CDN providers are [Akamai](https://www.akamai.com/us/en/media-and-delivery.jsp), [CloudFlare](https://www.cloudflare.com/features-cdn/) and [Amazon CloudFront](https://aws.amazon.com/cloudfront/). While most CDN providers are paid services, some offer basic functionality for free.
 
 ## Hosted JavaScript libraries
 
@@ -33,13 +33,13 @@ First we [fork the cdnjs repository](https://github.com/cdnjs/cdnjs/fork). In th
   "description": "Knockout paging",
   "keywords": ["knockout", "paging"],
   "homepage": "https://github.com/ErikSchierboom/knockout-paging",
-  "dependencies": { 
+  "dependencies": {
     "knockout": "^3.2.0"
   }
 }
 ```
 
-Although the format is similar to the [regular package.json format](https://docs.npmjs.com/files/package.json), the `"filename"` field is new *and* required.
+Although the format is similar to the [regular package.json format](https://docs.npmjs.com/files/package.json), the `"filename"` field is new _and_ required.
 
 At this point, we can start adding the files we want cdnjs to serve. To do so, we create a subfolder for the version of our library which files we want to host. Within that folder, we then put all files we want to be hosted. For our library, this gives us the following files and folders:
 
@@ -88,4 +88,4 @@ This will instruct cdnjs to periodically check for new versions at the specified
 We made our library available through a CDN by adding it to [cdnjs](https://cdnjs.com/), which was quite simple. Furthermore, we also configured cdnjs to automatically make new versions of our library available through the use of its auto-updating feature.
 
 And that brings us to the end of the last of our [series of posts]({{< ref "/posts/building-a-javascript-library" >}}) on how we published our [knockout-paging](https://github.com/ErikSchierboom/knockout-paging) plugin.
-Making our library available through a CDN was easy. 
+Making our library available through a CDN was easy.

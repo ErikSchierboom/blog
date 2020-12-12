@@ -1,11 +1,11 @@
 ---
 title: "Combining nested model lambda's in Razor"
 date: 2016-11-04
-tags: 
-  - C#
-  - .NET
-  - ASP.NET MVC
-  - Razor
+tags:
+  - csharp
+  - dotnet
+  - aspnetmvc
+  - razor
 url: /2016/11/04/razor-combining-lambdas/
 ---
 
@@ -30,14 +30,14 @@ If we set the `@model` directive of a view to our `UserPermissions` class, the v
 @model UserPermissions
 
 <dl class="dl-horizontal">
-    <dt>@Html.DisplayNameFor(m => m.Add)</dt>
-    <dd>@Html.DisplayFor(m => m.Add)</dd>
+  <dt>@Html.DisplayNameFor(m => m.Add)</dt>
+  <dd>@Html.DisplayFor(m => m.Add)</dd>
 
-    <dt>@Html.DisplayNameFor(m => m.Edit)</dt>
-    <dd>@Html.DisplayFor(m => m.Edit)</dd>
+  <dt>@Html.DisplayNameFor(m => m.Edit)</dt>
+  <dd>@Html.DisplayFor(m => m.Edit)</dd>
 
-    <dt>@Html.DisplayNameFor(m => m.Delete)</dt>
-    <dd>@Html.DisplayFor(m => m.Delete)</dd>
+  <dt>@Html.DisplayNameFor(m => m.Delete)</dt>
+  <dd>@Html.DisplayFor(m => m.Delete)</dd>
 </dl>
 ```
 
@@ -45,21 +45,25 @@ If we assume that `Add` is `true` and `Edit` and `Delete` are `false`, the follo
 
 ```html
 <dl class="dl-horizontal">
-    <dt>Add</dt>
-    <dd>
-        <input checked="checked" class="check-box" disabled="disabled" type="checkbox" />
-    </dd>
+  <dt>Add</dt>
+  <dd>
+    <input
+      checked="checked"
+      class="check-box"
+      disabled="disabled"
+      type="checkbox"
+    />
+  </dd>
 
-    <dt>Edit</dt>
-    <dd>
-        <input class="check-box" disabled="disabled" type="checkbox" />
-    </dd>
+  <dt>Edit</dt>
+  <dd>
+    <input class="check-box" disabled="disabled" type="checkbox" />
+  </dd>
 
-    <dt>Delete</dt>
-    <dd>
-        <input class="check-box" disabled="disabled" type="checkbox" />
-    </dd>
-
+  <dt>Delete</dt>
+  <dd>
+    <input class="check-box" disabled="disabled" type="checkbox" />
+  </dd>
 </dl>
 ```
 
@@ -81,46 +85,42 @@ public class RolePermissions
 The following view allows us to edit these permissions:
 
 ```html
-@model RolePermissions
+@model RolePermissions @using (Html.BeginForm()) { @Html.AntiForgeryToken()
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+<table>
+  <thead>
+    <tr>
+      <th></th>
+      <th>@Html.DisplayNameFor(m => m.User)</th>
+      <th>@Html.DisplayNameFor(m => m.Moderator)</th>
+      <th>@Html.DisplayNameFor(m => m.Administrator)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>@Html.DisplayNameFor(m => m.User.Add)</td>
+      <td>@Html.EditorFor(m => m.User.Add)</td>
+      <td>@Html.EditorFor(m => m.Moderator.Add)</td>
+      <td>@Html.EditorFor(m => m.Administrator.Add)</td>
+    </tr>
+    <tr>
+      <td>@Html.DisplayNameFor(m => m.User.Edit)</td>
+      <td>@Html.EditorFor(m => m.User.Edit)</td>
+      <td>@Html.EditorFor(m => m.Moderator.Edit)</td>
+      <td>@Html.EditorFor(m => m.Administrator.Edit)</td>
+    </tr>
+    <tr>
+      <td>@Html.DisplayNameFor(m => m.User.Delete)</td>
+      <td>@Html.EditorFor(m => m.User.Delete)</td>
+      <td>@Html.EditorFor(m => m.Moderator.Delete)</td>
+      <td>@Html.EditorFor(m => m.Administrator.Delete)</td>
+    </tr>
+  </tbody>
+</table>
 
-    <table>
-        <thead>
-        <tr>
-            <th></th>
-            <th>@Html.DisplayNameFor(m => m.User)</th>
-            <th>@Html.DisplayNameFor(m => m.Moderator)</th>
-            <th>@Html.DisplayNameFor(m => m.Administrator)</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td>@Html.DisplayNameFor(m => m.User.Add)</td>
-            <td>@Html.EditorFor(m => m.User.Add)</td>
-            <td>@Html.EditorFor(m => m.Moderator.Add)</td>
-            <td>@Html.EditorFor(m => m.Administrator.Add)</td>
-        </tr>
-        <tr>
-            <td>@Html.DisplayNameFor(m => m.User.Edit)</td>
-            <td>@Html.EditorFor(m => m.User.Edit)</td>
-            <td>@Html.EditorFor(m => m.Moderator.Edit)</td>
-            <td>@Html.EditorFor(m => m.Administrator.Edit)</td>
-        </tr>
-        <tr>
-            <td>@Html.DisplayNameFor(m => m.User.Delete)</td>
-            <td>@Html.EditorFor(m => m.User.Delete)</td>
-            <td>@Html.EditorFor(m => m.Moderator.Delete)</td>
-            <td>@Html.EditorFor(m => m.Administrator.Delete)</td>
-        </tr>
-        </tbody>
-    </table>
-
-    <button type="submit">Save</button>
+<button type="submit">Save</button>
 }
-``` 
+```
 
 Although this view is more complex, it's still quite readable. The rendered view looks something like this:
 
@@ -159,11 +159,11 @@ Although our view looks nice, it does have a fair amount of duplication. In part
 - The third column allows editing of that permission for the `Moderator` role.
 - The fourth column allows editing of that permission for the `Administrator` role.
 
-If one or more user types are added, or new types of permissions introduced, we have to edit our template in multiple places. This is tedious and error-prone, so let's try to remove this repetition. 
+If one or more user types are added, or new types of permissions introduced, we have to edit our template in multiple places. This is tedious and error-prone, so let's try to remove this repetition.
 
 In Razor, you can extract shared functionality into reusable components using [Razor helpers](https://www.asp.net/web-pages/overview/ui-layouts-and-themes/creating-and-using-a-helper-in-an-aspnet-web-pages-site), which are functions that return HTML. What's great though, is that you use a Razor template to define the HTML it returns. You can think of Razor helpers as a parameterized Razor view.
 
-A first, naive attempt to create such a helper for our `<tbody>` rows would look something like this: 
+A first, naive attempt to create such a helper for our `<tbody>` rows would look something like this:
 
 ```csharp
 @helper PermissionRow(Func<UserPermissions, bool> permission)
@@ -181,9 +181,8 @@ We can then eliminate much of the duplication as follows:
 
 ```html
 <tbody>
-@PermissionRow(permissions => permissions.Add)
-@PermissionRow(permissions => permissions.Edit)
-@PermissionRow(permissions => permissions.Delete)
+  @PermissionRow(permissions => permissions.Add) @PermissionRow(permissions =>
+  permissions.Edit) @PermissionRow(permissions => permissions.Delete)
 </tbody>
 ```
 
@@ -193,13 +192,13 @@ Unfortunately, if we execute this code, we get the following runtime exception:
 Additional information: Templates can be used only with field access, property access, single-dimension array index, or single-parameter custom indexer expressions.
 </pre>
 
-What this error message tells us, is that the HTML helper methods only accept a very restricted set of expressions, namely ones that directly reference a property. In our example, we used a function to reference the property, which is not supported. 
+What this error message tells us, is that the HTML helper methods only accept a very restricted set of expressions, namely ones that directly reference a property. In our example, we used a function to reference the property, which is not supported.
 
 In our previous example, we did directly reference the property: `@Html.EditorFor(m => m.User.Delete)`, which worked fine. That lambda's expression is of type `Expression<RolePermissions, bool>`, so how can we convert the `Func<UserPermissions, bool>` parameter of our Razor helper to `Expression<RolePermissions, bool>`? Let's find out!
 
 ## Solution
 
-To convert our `Func<UserPermissions, bool>` expression to `Expression<RolePermissions, bool>`, we'll start by wrapping it in an `Expression`: 
+To convert our `Func<UserPermissions, bool>` expression to `Expression<RolePermissions, bool>`, we'll start by wrapping it in an `Expression`:
 
 ```csharp
 @helper PermissionRow(Expression<Func<UserPermissions, bool>> permission)
@@ -213,7 +212,7 @@ To convert our `Func<UserPermissions, bool>` expression to `Expression<RolePermi
 }
 ```
 
-The reason we use an `Expression<Func<T>>` instead of a `Func<T>`, is that expressions can be transformed into other expressions. We'll see how we can use this feature shortly. 
+The reason we use an `Expression<Func<T>>` instead of a `Func<T>`, is that expressions can be transformed into other expressions. We'll see how we can use this feature shortly.
 
 The next step is to extract the column rendering from our `PermissionRow` HTML helper to a separate HTML helper: `PermissionColumn`. This helper will receive two parameters:
 
@@ -224,7 +223,7 @@ The basic structure of this helper looks like this:
 
 ```csharp
 @helper PermissionColumn(
-    Expression<Func<UserPermissions, bool>> userPermission, 
+    Expression<Func<UserPermissions, bool>> userPermission,
     Expression<Func<RolePermissions, UserPermissions>> rolePermission)
 {
     <td>@Html.EditorFor("TODO: combine the two expressions")</td>
@@ -236,7 +235,7 @@ At this point, we are almost there. If we could combine the two expressions into
 So how can we combine these two expressions into a single expression? Let's start with the basic skeleton of the combine method:
 
 ```csharp
-public static Expression<Func<RolePermissions, UserPermissions>> 
+public static Expression<Func<RolePermissions, UserPermissions>>
     Combine<RolePermissions, UserPermissions, bool>
         (Expression<Func<RolePermissions, UserPermissions>> outer,
          Expression<Func<UserPermissions, bool>> inner)
@@ -256,9 +255,9 @@ If you think about it, the second parameter must be equal to the outer expressio
 Expression.Lambda<Func<RolePermissions, bool>>(body, outer.Parameters);
 ```
 
-For the first parameter, we need to construct an expression that represents the body of the combined expression. What we want is to pass the output of the `Func<RolePermissions, UserPermissions>` expression to the input parameter of the `Func<UserPermissions, bool>` expression. If you think about this backwards, this is the same as replacing the input parameter of the `Func<UserPermissions, bool>` expression with the output of the body of the `Func<RolePermissions, UserPermissions>` expression. 
+For the first parameter, we need to construct an expression that represents the body of the combined expression. What we want is to pass the output of the `Func<RolePermissions, UserPermissions>` expression to the input parameter of the `Func<UserPermissions, bool>` expression. If you think about this backwards, this is the same as replacing the input parameter of the `Func<UserPermissions, bool>` expression with the output of the body of the `Func<RolePermissions, UserPermissions>` expression.
 
-To transform/rewrite an expression, the `ExpressionVisitor` class can be used. Surprisingly, we need very little code to create a visitor that replaces one expression with another:  
+To transform/rewrite an expression, the `ExpressionVisitor` class can be used. Surprisingly, we need very little code to create a visitor that replaces one expression with another:
 
 ```csharp
 private class SwapVisitor : ExpressionVisitor
@@ -281,7 +280,7 @@ The constructor takes two `Expression` parameters:
 1. The `from` parameter is the expression we want to replace.
 2. The `to` parameter is the expression we want to replace it with.
 
-The actual rewriting happens in the `Visit()` method. There, we check if the node parameter equals the `from` expression. If so, we return the `to` expression; otherwise, we just continue visiting the node. 
+The actual rewriting happens in the `Visit()` method. There, we check if the node parameter equals the `from` expression. If so, we return the `to` expression; otherwise, we just continue visiting the node.
 
 We can now use this class to create an expression visitor in which we replace the inner expression's parameter (which has one parameter) with the outer expression's body:
 
@@ -297,7 +296,7 @@ using System.Linq.Expressions;
 
 public static class Expressions
 {
-    public static Expression<Func<RolePermissions, bool>> 
+    public static Expression<Func<RolePermissions, bool>>
         Combine<RolePermissions, UserPermissions, bool>
             (Expression<Func<RolePermissions, UserPermissions>> outer,
              Expression<Func<UserPermissions, bool>> inner)
@@ -305,7 +304,7 @@ public static class Expressions
         var swap = new SwapVisitor(inner.Parameters[0], outer.Body);
         return Expression.Lambda<Func<TOuter, TProperty>>(
             swap.Visit(inner.Body), outer.Parameters);
-    }    
+    }
 }
 ```
 
@@ -336,7 +335,7 @@ We can now run our application to verify that everything still works, which it d
 
 ### Making the extension generic
 
-The final step is to make the `Combine` method generic, which is just a matter of replacing the concrete types with type parameters: 
+The final step is to make the `Combine` method generic, which is just a matter of replacing the concrete types with type parameters:
 
 ```csharp
 public static Expression<Func<TOuter, TProperty>> Combine<TOuter, TInner, TProperty>(

@@ -1,17 +1,17 @@
 ---
 title: "Building a JavaScript library - part 5: build server"
 date: 2015-10-26
-tags: 
-  - JavaScript
-  - Knockout
-  - Build server
+tags:
+  - javascript
+  - knockout
+  - build-server
 ---
 
 This is the fifth in a [series of posts]({{< ref "/posts/building-a-javascript-library" >}}) that discuss the steps taken to publish our library. In our [previous post]({{< ref "/posts/building-a-javascript-library-part-4-package-managers" >}}), we added support for package managers. This post will show how we use build servers to automatically build and test our software.
 
 ## Build servers
 
-When creating a library, it is important to verify that your code also works as intended on other machines/configurations. One way to do this is by utilising a build server, which is software designed to automatically build (and often test) software. 
+When creating a library, it is important to verify that your code also works as intended on other machines/configurations. One way to do this is by utilising a build server, which is software designed to automatically build (and often test) software.
 
 Most build servers can be linked to a source control repository, which allows them to do automatic builds whenever a change in the source control repository is detected. This automatic building is known as [continous integration](https://en.wikipedia.org/wiki/Continuous_integration).
 
@@ -56,7 +56,7 @@ The first line specifies the language Travis should create a build environment f
 
 In the second line, we indicate that before running our actual build script, we want Travis to install [Gulp](http://gulpjs.com/) in our build environment. Note that we can use NPM here, which Travis installs automatically for Node.js build environments.
 
-Finally, we tell Travis what script to run to build our repository. For that, we use our custom `gulp ci` command, which uses Gulp (installed in the previous step) to build *and* test our library.
+Finally, we tell Travis what script to run to build our repository. For that, we use our custom `gulp ci` command, which uses Gulp (installed in the previous step) to build _and_ test our library.
 
 We then commit the `.travis.yml` file to version control and push it to GitHub. At this point, Travis will automatically detect the change in our repository and adds it to the build queue. After a short while, Travis will be running the build as specified by the `.travis.yml` file and output the build log to the screen:
 
@@ -72,13 +72,13 @@ This build log shows that Travis does several things:
 - Run the `script` script, which executes the `gulp ci` command.
 - Determine if the build's success by looking at the exit code (0 means success).
 
-From now on, each change in our repository will trigger a new Travis build. This means that we use Travis for continous integration. 
+From now on, each change in our repository will trigger a new Travis build. This means that we use Travis for continous integration.
 
 It is worth noting that you'll receive an email with the build results each time Travis has run a build.
 
 ### Badge
 
-One last thing we can now do is to include a *badge* in our project's readme. This badge is an image showing the last build's status.
+One last thing we can now do is to include a _badge_ in our project's readme. This badge is an image showing the last build's status.
 
 To find the badge settings, click on the build status button next to the GitHub logo:
 
@@ -154,7 +154,7 @@ Once again, you can clearly see that the steps that were executed reflect our YA
 
 ### Badge
 
-AppVeyor also supports badges, which you can find in the "Badges" section on the project's "SETTINGS" tab: 
+AppVeyor also supports badges, which you can find in the "Badges" section on the project's "SETTINGS" tab:
 
 ![AppVeyor badge](/images/posts/building-a-javascript-library-part-5-build-server/appveyor-badge.png)
 
@@ -196,7 +196,7 @@ As we don't have any coverage at the moment, instructions are displayed on how t
 
 ### Generating code coverage reports
 
-Because code coverage is determined by running tests, we need to hook up a code coverage tool to our library's test runner: Mocha. One of the best code coverage libraries is [blanket.js](http://blanketjs.org/), which supports QUnit, Jasmine *and* Mocha. Let's install Blanket:
+Because code coverage is determined by running tests, we need to hook up a code coverage tool to our library's test runner: Mocha. One of the best code coverage libraries is [blanket.js](http://blanketjs.org/), which supports QUnit, Jasmine _and_ Mocha. Let's install Blanket:
 
 ```bash
 npm install blanket --save-dev
@@ -239,7 +239,7 @@ This will create the `coverage.html` file, which you can view in a browser:
 
 ![Coveralls HTML report](/images/posts/building-a-javascript-library-part-5-build-server/coveralls-html-report.png)
 
-This report lists the code coverage percentage and highlights uncovered lines in red. 
+This report lists the code coverage percentage and highlights uncovered lines in red.
 
 Unfortunately, this HTML coverage report cannot be used as input for coveralls.io, which requires code coverage reports in a JSON-based format:
 
@@ -257,7 +257,7 @@ To have our library submit code coverage reports to coveralls.io in the correct 
 npm install mocha-lcov-reporter --save-dev
 ```
 
-This library adds a reporter to Mocha that outputs coverage data in a more structured format. 
+This library adds a reporter to Mocha that outputs coverage data in a more structured format.
 
 Let's add another entry to the `"scripts"` section in our `package.json` file that uses this new reporter:
 
@@ -308,7 +308,7 @@ At the moment, there are no environment variables, so we'll click on the "Add" b
 
 ![Travis enviroment value](/images/posts/building-a-javascript-library-part-5-build-server/travis-environment-values.png)
 
-After we have entered the correct name and value, we click on the "Add" button to save the environment variable. From now on, any new builds will have its `COVERALLS_REPO_TOKEN` enviroment variable set to the value we specified. 
+After we have entered the correct name and value, we click on the "Add" button to save the environment variable. From now on, any new builds will have its `COVERALLS_REPO_TOKEN` enviroment variable set to the value we specified.
 
 Note that for security reasons, you won't see the actual value on the settings page:
 
@@ -330,7 +330,7 @@ after_success:
   - NODE_ENV=test YOURPACKAGE_COVERAGE=1 ./node_modules/.bin/mocha --require blanket --reporter mocha-lcov-reporter | ./node_modules/coveralls/bin/coveralls.js
 ```
 
-We then commit our modified `.travis.yml` file and push it to GitHub. This will cause Travis to do a new build of our repository, but this time it will also submit the coverage results to coveralls.io. 
+We then commit our modified `.travis.yml` file and push it to GitHub. This will cause Travis to do a new build of our repository, but this time it will also submit the coverage results to coveralls.io.
 
 Once the build has completed, we can see the coverage results on our repository's coveralls.io page:
 
@@ -348,7 +348,7 @@ And now we have setup Travis to automatically calculate our library's code cover
 
 ## Conclusion
 
-For our library, we wanted to ensure maximum compatibility. To this end, we setup the Travis and AppVeyor build servers to automatically build and test our library whenever the repository is modified. 
+For our library, we wanted to ensure maximum compatibility. To this end, we setup the Travis and AppVeyor build servers to automatically build and test our library whenever the repository is modified.
 
 Both Travis and AppVeyor were easy to setup, requiring a small number of clicks to enable automatic builds for our repository as well as creating a configuration file specifying how builds should be run. Furthermore, as Travis runs on Linux and AppVeyor on Windows, we automatically test different platforms.
 

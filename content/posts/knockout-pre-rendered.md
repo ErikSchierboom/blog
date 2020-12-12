@@ -1,10 +1,10 @@
 ---
 title: "Using Knockout with existing HTML content"
 date: 2015-04-25
-tags: 
-  - JavaScript
-  - Knockout
-  - HTML
+tags:
+  - javascript
+  - knockout
+  - html
 url: /2015/04/25/knockout-pre-rendered/
 ---
 
@@ -31,9 +31,9 @@ Normally, you'd bind the `name` observable to an HTML element as follows:
 <span data-bind="text: name">Michael Jordan</span>
 ```
 
-Once the binding has been applied however, the text within the `<span>` element will be cleared, as the bound observable did not have a value (existing HTML content is ignored). 
+Once the binding has been applied however, the text within the `<span>` element will be cleared, as the bound observable did not have a value (existing HTML content is ignored).
 
-We can fix this by specifying the `init` binding handler *before* the `text` binding handler:
+We can fix this by specifying the `init` binding handler _before_ the `text` binding handler:
 
 ```html
 <span data-bind="init, text: name">Michael Jordan</span>
@@ -50,7 +50,8 @@ You can combine the `init` handler with any binding, as long as you ensure that 
 <input data-bind="init, value: name" value="Larry Bird" type="text" />
 ```
 
-### Converting 
+### Converting
+
 By default, the `init` binding will set the observable's value to a string. If you want to convert to a different type, you can specify a convert function:
 
 ```html
@@ -67,16 +68,16 @@ It is also possible to use your own, custom conversion function. You could, for 
 function CustomConvertViewModel() {
   this.dateOfBirth = ko.observable();
 
-  this.parseDate = function(innerText) {
+  this.parseDate = function (innerText) {
     return new Date(Date.parse(innerText));
-  }
+  };
 }
 ```
 
 You can then use this custom convert function as follows:
 
 ```html
-<span data-bind="init: { convert: parseDate }, text: dateOfBirth">
+<span data-bind="init: { convert: parseDate }, text: dateOfBirth"></span>
 ```
 
 ### Virtual elements
@@ -109,6 +110,7 @@ Although you'd probably not need it, you could have the `init` handler initializ
 The result of this binding is that the `name` observable will have its value initialized to `"Michael Jordan"`, after which the element will be bound to the `year` observable.
 
 ## Foreach init binding
+
 This binding handler wraps the `foreach` binding, but instead of creating new HTML elements, it binds to existing HTML elements. Consider the following view model:
 
 ```javascript
@@ -143,10 +145,11 @@ There are several things to note:
 3. You can use the `init` binding handler to initialize the array items themselves.
 
 ### Template
+
 You can also use a template that is defined elsewhere on the page:
 
 ```html
-<ul data-bind="foreachInit: { name: 'personTemplate', data: persons }">  
+<ul data-bind="foreachInit: { name: 'personTemplate', data: persons }">
   <li data-init data-bind="init, text: name">Michael Jordan</li>
   <li data-init data-bind="init, text: name">Larry Bird</li>
   <li data-init data-bind="init, text: name">Magic Johnson</li>
@@ -167,9 +170,9 @@ Take the following view model:
 function ForeachDynamicViewModel() {
   this.persons = ko.observableArray();
 
-  this.addPerson = function() {
+  this.addPerson = function () {
     this.persons.push(new PersonViewModel());
-  }
+  };
 }
 ```
 
@@ -178,7 +181,9 @@ Note that the `persons` observable array does not contain any elements, but that
 We can use the `foreachInit` binding handler as follows:
 
 ```html
-<ul data-bind="foreachInit: { name: 'personTemplate', createElement: addPerson }">  
+<ul
+  data-bind="foreachInit: { name: 'personTemplate', createElement: addPerson }"
+>
   <li data-template data-bind="text: name"></li>
   <li data-init data-bind="init, text: name">Michael Jordan</li>
   <li data-init data-bind="init, text: name">Larry Bird</li>
@@ -201,6 +206,7 @@ You can also install the library using NPM:
 The library is also available from a [CDN](https://cdnjs.com/libraries/knockout-pre-rendered).
 
 ## Demos
+
 Here are some JSBin demo's that show how to use the binding handlers:
 
 - [`foreachInit` binding](http://jsbin.com/nocaro)
@@ -213,4 +219,5 @@ Here are some JSBin demo's that show how to use the binding handlers:
 Many thanks go out to [Brian M Hunt](https://github.com/brianmhunt), which [`fastForEach` binding handler](https://github.com/brianmhunt/knockout-fast-foreach) formed the basis of the `foreachInit` binding handler.
 
 ## Conclusion
+
 For newly-developed Knockout applications, you probably don't need this library, unless you worry greatly about search engine indexation. However, if you have an existing application that already serves HTML, this library will allow you to integrate Knockout in an easy and non-disruptive way.

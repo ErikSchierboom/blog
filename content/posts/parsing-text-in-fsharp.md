@@ -1,10 +1,10 @@
 ---
 title: "Parsing text in F#"
 date: 2016-12-10
-tags: 
-  - F#
-  - Parsing
-  - Exercism
+tags:
+  - fsharp
+  - parsing
+  - exercism
 url: /2016/12/10/parsing-text-in-fsharp/
 ---
 
@@ -43,21 +43,21 @@ fsharp (Wordy) /Users/erikschierboom/exercism/fsharp/wordy
 New:                      1 problem
 fsharp (Wordy) /Users/erikschierboom/exercism/fsharp/wordy
 
-unchanged: 0, updated: 0, new: 1 
+unchanged: 0, updated: 0, new: 1
 ```
 
 If we examine the contents of the `wordy` directory, we'll find two files:
 
-1. `README.md`: a textual description of the exercise. 
-2. `WordyTest.fs`: the test suite, to verify the correctness of the implementation. 
+1. `README.md`: a textual description of the exercise.
+2. `WordyTest.fs`: the test suite, to verify the correctness of the implementation.
 
 As said, the `README` file describes the problem we should solve:
 
-> Write a program that takes a word problem and returns the answer as an integer. 
+> Write a program that takes a word problem and returns the answer as an integer.
 
 It also lists some sample word problems, such as:
 
-> What is 5 plus 13? 
+> What is 5 plus 13?
 
 Now that we know the problem to solve, let's try to solve it. We'll go at it one test at a time, slowly building up a correct implementation that passes all tests (which are defined in the `WordyTest.fs` test suite). In the process, we'll do lots of refactoring, to try to improve the quality of our code. Let's start!
 
@@ -71,13 +71,13 @@ let ``Can parse and solve addition problems`` () =
     Assert.That(solve "What is 1 plus 1?", Is.EqualTo(Some 2))
 ```
 
-From this code we can infer that we need to define a `solve` function that takes a `string` parameter (the equation) and returns an `int option` value (the equation's result). 
+From this code we can infer that we need to define a `solve` function that takes a `string` parameter (the equation) and returns an `int option` value (the equation's result).
 
 Let's implement a very simple equation solver that removes all non-digit characters and then parses the two remaining digits to calculate the sum:
 
 ```fsharp
 let solve (question: string) =
-    let equation = 
+    let equation =
         question
             .Replace("What is ", "")
             .Replace(" plus ", "")
@@ -92,15 +92,15 @@ If we run the test with this code, it passes.
 Note that we aligned the `Convert.ToInt` calls. Aligning these statements has two advantages:
 
 1. As the statements are so alike, they give users a clue that they probably have similar functionality.
-2. It helps us compare the statements. With this alignment, it becomes easy to see which parts of the strings they convert.  
+2. It helps us compare the statements. With this alignment, it becomes easy to see which parts of the strings they convert.
 
 #### Refactoring: simplify integer conversion
 
-Our first refactoring is to use the `int` function instead of `Convert.ToInt32`: 
+Our first refactoring is to use the `int` function instead of `Convert.ToInt32`:
 
 ```fsharp
 let solve (question: string) =
-    let equation = 
+    let equation =
         question
             .Replace("What is ", "")
             .Replace(" plus ", "")
@@ -112,11 +112,11 @@ let solve (question: string) =
 
 A quick check verifies that our code still passes the test.
 
-We can also replace the `Substring` calls with array slice syntax: 
+We can also replace the `Substring` calls with array slice syntax:
 
 ```fsharp
 let solve (question: string) =
-    let equation = 
+    let equation =
         question
             .Replace("What is ", "")
             .Replace(" plus ", "")
@@ -131,7 +131,7 @@ let solve (question: string) =
 Next, we can make the `solve` function a bit easier to read by extracting some helper functions:
 
 ```fsharp
-let parseEquation (question: string) = 
+let parseEquation (question: string) =
     question
         .Replace("What is ", "")
         .Replace(" plus ", "")
@@ -169,13 +169,13 @@ let solve (question: string) =
     Some (left + right)
 ```
 
-This time, the double digit test passes. Although regular expressions can easily become complicated and hard to read, ours is quite simple and understandable. In this case, I feel that using a regular expression does improve the code's readability. 
+This time, the double digit test passes. Although regular expressions can easily become complicated and hard to read, ours is quite simple and understandable. In this case, I feel that using a regular expression does improve the code's readability.
 
 Note that we assume the regular expression always matches. We'll defer adding proper error handling until later, when the tests force us to.
 
 #### Refactoring: using named expressions
 
-Although the regular expression is quite simple, I don't like how we extract the matched digit values using integer indexing. We can improve this by using [named expressions](https://msdn.microsoft.com/en-us/library/bs2twtah(v=vs.110).aspx#named_matched_subexpression). This regular expression feature lets us attach a name to an expression, which we can then use to retrieve the matched value:
+Although the regular expression is quite simple, I don't like how we extract the matched digit values using integer indexing. We can improve this by using [named expressions](<https://msdn.microsoft.com/en-us/library/bs2twtah(v=vs.110).aspx#named_matched_subexpression>). This regular expression feature lets us attach a name to an expression, which we can then use to retrieve the matched value:
 
 ```fsharp
 let solve (question: string) =
@@ -186,7 +186,7 @@ let solve (question: string) =
     Some (left + right)
 ```
 
-You can see that the `(\d+) plus (\d+)` part of the regular expression has been replaced with `(?<left>\d+) plus (?<right>\d+)`. The `?<left>` and `?<right>` parts specify the names of the expressions. We then use these names to index into the matched groups, instead of using integer indexers. 
+You can see that the `(\d+) plus (\d+)` part of the regular expression has been replaced with `(?<left>\d+) plus (?<right>\d+)`. The `?<left>` and `?<right>` parts specify the names of the expressions. We then use these names to index into the matched groups, instead of using integer indexers.
 
 Re-running our tests verifies that everything still works.
 
@@ -229,7 +229,7 @@ let pattern = "What is (?<left>-?\d+) (?<operator>plus|minus) (?<right>-?\d+)\?"
 The final step is to replace the `Some (left + right)` expression with a match on the operator's value to determine what value to return:
 
 ```fsharp
-match matched.Groups.["operator"].Value with 
+match matched.Groups.["operator"].Value with
 | "plus"  -> Some (left + right)
 | "minus" -> Some (left - right)
 ```
@@ -240,7 +240,7 @@ Running the tests again verifies that they all pass.
 
 If we look at our current code, it consists of three simple steps:
 
-1. Match the question with our regular expression. 
+1. Match the question with our regular expression.
 2. Convert the `"left"` and `"right"` groups to `int` values.
 3. Based on the matched `"operator"`, combine the left and right values and return it as an `int option` value.
 
@@ -254,12 +254,12 @@ let (|Equation|) question =
     let left  = int matched.Groups.["left"].Value
     let right = int matched.Groups.["right"].Value
 
-    match matched.Groups.["operator"].Value with 
+    match matched.Groups.["operator"].Value with
     | "plus"  -> Some (left + right)
     | "minus" -> Some (left - right)
 ```
 
-The main thing to note is that the function's body is just literally copy-pasted from the `solve` method. What's different though, is the function's identifier. An Active Pattern's identifier is defined between pipe (`|`) characters, placed within parentheses. 
+The main thing to note is that the function's body is just literally copy-pasted from the `solve` method. What's different though, is the function's identifier. An Active Pattern's identifier is defined between pipe (`|`) characters, placed within parentheses.
 
 We can use this Active Pattern in our `solve` function as follows:
 
@@ -269,7 +269,7 @@ let solve (question: string) =
     | Equation result -> result
 ```
 
-You can see that we can `match` the question `string` using our `Equation` Active Pattern, with the value returned from the Active Pattern being bound to the `result` identifer.  
+You can see that we can `match` the question `string` using our `Equation` Active Pattern, with the value returned from the Active Pattern being bound to the `result` identifer.
 
 Re-running the tests confirms that everything still works. Looking at our code though, I don't think the Active Pattern gives us much in terms of readability our functionality, so we'll revert our code to the previous iteration (which didn't use an Active Pattern).
 
@@ -286,7 +286,7 @@ let ``Can parse and solve multiplication problems`` () =
 This is trivial to add. We simply add the `"multiplied by"` string to the operator part of our regular expression, and then handle this operator in our `match` clause:
 
 ```fsharp
-match matched.Groups.["operator"].Value with 
+match matched.Groups.["operator"].Value with
 | "plus"          -> Some (left + right)
 | "minus"         -> Some (left - right)
 | "multiplied by" -> Some (left * right)
@@ -341,7 +341,7 @@ let equationPattern = "What is (?<left>-?\d+)(?<operations>.+?)\?"
 let operationsPattern = " (?<operator>plus|minus|multiplied by|divided by) (?<right>-?\d+)"
 ```
 
-Next, we'll do two matches: 
+Next, we'll do two matches:
 
 1. We match the equation (without matching the actual operations).
 2. We match the operations using the matched `"operations"` part of the equation match:
@@ -356,9 +356,9 @@ We can then calculate the equation's result by folding on the matched operations
 ```fsharp
 let left = int equationMatch.Groups.["left"].Value
 
-let folder result (operation: Match) = 
+let folder result (operation: Match) =
     let right = int operation.Groups.["right"].Value
-    match operation.Groups.["operator"].Value with 
+    match operation.Groups.["operator"].Value with
     | "plus"          -> result + right
     | "minus"         -> result - right
     | "multiplied by" -> result * right
@@ -408,7 +408,7 @@ let ``Can add then multiply`` () =
 
 Although our test passes, there is something odd about this test. Shouldn't the result be `-17`? Well, yes and no. In mathematics, the multiplication operator has a higher precedence than the addition operator, so the equation should be evaluated as `-3 + (7 * -2)`, which equals `-17`. However, this does not hold for this exercise, as the README explicitly states:
 
-> Remember, that these are verbal word problems, not treated as you normally would treat a written problem. This means that you calculate as you move forward each step. In other words, you should ignore order of operations. 3 + 2 * 3 = 15, not 9.
+> Remember, that these are verbal word problems, not treated as you normally would treat a written problem. This means that you calculate as you move forward each step. In other words, you should ignore order of operations. 3 + 2 \* 3 = 15, not 9.
 
 Ignoring the order of operations is precisely what we do, hence the passing test.
 
@@ -418,7 +418,7 @@ This test passes.
 
 ### Test 15: ignore unsupported operation
 
-With test 15, we have our first test that is expected to "fail", indicated by returning `None`. 
+With test 15, we have our first test that is expected to "fail", indicated by returning `None`.
 
 ```fsharp
 [<Test>]
@@ -447,11 +447,11 @@ let ``Irrelevant problems are not valid`` () =
     Assert.That(solve "Who is the president of the United States?", Is.EqualTo(None))
 ```
 
-As there are no matching operations, `None` is returned and this test passes. With that our implementation now passes all tests. Hurray! 
+As there are no matching operations, `None` is returned and this test passes. With that our implementation now passes all tests. Hurray!
 
 Does this mean we're done? Well, we could use the CLI to submit our solution to Exercism and move on the next exercise. However, let's try to do some refactoring/cleanup, to see if we can improve the code even more.
 
-### Refactoring: fixing compile-time warning 
+### Refactoring: fixing compile-time warning
 
 Those of your that know your F#, will have known that when we introduced the `match` statement, we introduced the following compile-time warning:
 
@@ -462,7 +462,7 @@ Warning FS0025: Incomplete pattern matches on this expression.
 What this error message tells us, is that our `match` statement doesn't handle all possible cases. This is true of course, as we only handle the four supported operators. We could ignore this warning (the code still compiles after all), but it is always a good idea to heed compiler warnings, so let's fix it:
 
 ```fsharp
-match operation.Groups.["operator"].Value with 
+match operation.Groups.["operator"].Value with
 | "plus"          -> result + right
 | "minus"         -> result - right
 | "multiplied by" -> result * right
@@ -474,7 +474,7 @@ The added default case simply throws an exception. If we now compile our code, t
 
 ### Refactoring: regular expression matching, revisited
 
-Previously, we had problems to match both the left *and* right part of an equation using a single regular expression. We then resorted to matching the equation in two parts: first the equation, then the operations. However, after some more searching, we came across a very interesting regular expressions feature: positive lookahead assertions. With that, we can actually get it all working in a single regex:
+Previously, we had problems to match both the left _and_ right part of an equation using a single regular expression. We then resorted to matching the equation in two parts: first the equation, then the operations. However, after some more searching, we came across a very interesting regular expressions feature: positive lookahead assertions. With that, we can actually get it all working in a single regex:
 
 ```fsharp
 let solve (question: string) =
@@ -486,9 +486,9 @@ let solve (question: string) =
     else
         let left = int equationMatches.[0].Groups.["left"].Value
 
-        let folder result (operation: Match) = 
+        let folder result (operation: Match) =
             let right = int operation.Groups.["right"].Value
-            match operation.Groups.["operator"].Value with 
+            match operation.Groups.["operator"].Value with
             | "plus"          -> result + right
             | "minus"         -> result - right
             | "multiplied by" -> result * right
@@ -516,9 +516,9 @@ let solve (question: string) =
     else
         let left = regexGroupInt "left" equationMatches.[0]
 
-        let folder result (operation: Match) = 
+        let folder result (operation: Match) =
             let right = regexGroupInt "right" operation
-            match regexGroupString "operator" operation with 
+            match regexGroupString "operator" operation with
             | "plus"          -> result + right
             | "minus"         -> result - right
             | "multiplied by" -> result * right
@@ -538,8 +538,8 @@ let parseOperator     (m: Match) = regexGroupString "operator" m
 let parseOperation    (m: Match) = (parseOperator m, parseRightOperand m)
 
 let parseOperations (matches: MatchCollection) =
-    matches 
-    |> Seq.cast 
+    matches
+    |> Seq.cast
     |> Seq.map parseOperation
 ```
 
@@ -549,8 +549,8 @@ The relevant part of the `solve` function already looks much cleaner without all
 let left = parseLeftOperand equationMatches
 let operations = parseOperations equationMatches
 
-let folder result (operator, right) = 
-    match operator with 
+let folder result (operator, right) =
+    match operator with
     | "plus"          -> result + right
     | "minus"         -> result - right
     | "multiplied by" -> result * right
@@ -564,9 +564,9 @@ Some result
 Our next step is to extract the equation result calculating code into its own function:
 
 ```fsharp
-let solveEquation (left, operations) = 
-    let folder result (operation, right) = 
-        match operation with 
+let solveEquation (left, operations) =
+    let folder result (operation, right) =
+        match operation with
         | "plus"          -> result + right
         | "minus"         -> result - right
         | "multiplied by" -> result * right
@@ -579,8 +579,8 @@ let solveEquation (left, operations) =
 The `folder` helper function is badly named, so let's extract it to a better-named function:
 
 ```fsharp
-let applyOperation acc (operation, right) = 
-    match operation with 
+let applyOperation acc (operation, right) =
+    match operation with
     | "plus"          -> acc + right
     | "minus"         -> acc - right
     | "multiplied by" -> acc * right
@@ -631,7 +631,7 @@ The `solve` function then becomes quite simple:
 ```fsharp
 let solve (question: string) =
     match parseEquation question with
-    | Some (left, operations) -> 
+    | Some (left, operations) ->
         let result = solveEquation (left, operations)
         Some result
     | None -> None
@@ -676,7 +676,7 @@ let parseOperator     (m: Match) = regexGroupString "operator" m
 let parseOperation    (m: Match) = (parseOperator m, parseRightOperand m)
 
 let parseOperations (matches: MatchCollection) =
-    matches 
+    matches
     |> Seq.cast
     |> Seq.map parseOperation
 
@@ -685,8 +685,8 @@ let parseEquation (question: string) =
     | matches when matches.Count = 0 -> None
     | matches -> Some (parseLeftOperand matches, parseOperations matches)
 
-let applyOperation acc (operation, right) = 
-    match operation with 
+let applyOperation acc (operation, right) =
+    match operation with
     | "plus"          -> acc + right
     | "minus"         -> acc - right
     | "multiplied by" -> acc * right
@@ -697,24 +697,24 @@ let solveEquation (left, operations) = Seq.fold applyOperation left operations
 
 let solve (question: string) =
     question
-    |> parseEquation 
+    |> parseEquation
     |> Option.map solveEquation
 ```
 
-While this implementation is not too bad, there is a fair amount of boilerplate code to handle the regular expression. Furthermore, we use a relatively obscure regular expression feature (positive lookahead assertions), which lessens its readability. 
+While this implementation is not too bad, there is a fair amount of boilerplate code to handle the regular expression. Furthermore, we use a relatively obscure regular expression feature (positive lookahead assertions), which lessens its readability.
 
 Is there anything we can do to fix these issues? Well, actually there is! Let's prepare ourselves for another big rewrite, this time using parser combinators.
 
 ### Refactoring: parser combinators
 
-If we look at our existing implementation, we can see that we parse an equation in several, small steps: 
+If we look at our existing implementation, we can see that we parse an equation in several, small steps:
 
 1. Parse the left operand.
 2. Parse the list of right operator/operand combinations:
-    - Parse the right operator.
-    - Parse the right operand.
+   - Parse the right operator.
+   - Parse the right operand.
 
-This type of parsing setup is ideal for a specific type of text parsing library: a [parser combinator](https://en.wikipedia.org/wiki/Parser_combinator). At its core, a parser combinator is a collection of fairly basic text-parsing functions. The reason it is called a parser *combinator*, is that you can create complex parsers by combining those basic parsers. Let's convert our existing, regular expression-based implementation to one that uses a parser combinator library. 
+This type of parsing setup is ideal for a specific type of text parsing library: a [parser combinator](https://en.wikipedia.org/wiki/Parser_combinator). At its core, a parser combinator is a collection of fairly basic text-parsing functions. The reason it is called a parser _combinator_, is that you can create complex parsers by combining those basic parsers. Let's convert our existing, regular expression-based implementation to one that uses a parser combinator library.
 
 Let's start by installing the [FParsec](http://www.quanttec.com/fparsec/) parser combinator library:
 
@@ -724,7 +724,7 @@ We are now ready to create our first parser.
 
 #### Parser: left operand
 
-First up: parsing the left operand, which parses a `string` into an `int`. As you might have expected, FParsec already has a function to do this for you: [`pint32`](http://www.quanttec.com/fparsec/reference/charparsers.html#members.pint32) (which you should read as: *parse an int32*).
+First up: parsing the left operand, which parses a `string` into an `int`. As you might have expected, FParsec already has a function to do this for you: [`pint32`](http://www.quanttec.com/fparsec/reference/charparsers.html#members.pint32) (which you should read as: _parse an int32_).
 
 To verify the `pint32` parser's behavior, open an F# interactive window and load the FParsec library references. We can then test the parser using the [`run`](http://www.quanttec.com/fparsec/reference/charparsers.html#members.run) function:
 
@@ -766,9 +766,9 @@ Hmmm, the `parseLeftOperand` and `parseRightOperand` functions are identical! We
 
 ```fsharp
 let parseOperand = pint32
-``` 
+```
 
-Previously, this was not possible, as the operand values had to be retrieved from differently named regular expression groups. 
+Previously, this was not possible, as the operand values had to be retrieved from differently named regular expression groups.
 
 #### Parser: right operator
 
@@ -800,20 +800,20 @@ run (pstring "abc") "cde";;
 Okay, so we can create a parser to match a string, but how to create a parser that matches one of the four operators? Well, simple: we use the [`<!>`](http://www.quanttec.com/fparsec/reference/primitives.html#members.:60::124::62:) (read: or) parser:
 
 ```fsharp
-let parseOperator = 
-    pstring "plus"          <|> 
+let parseOperator =
+    pstring "plus"          <|>
     pstring "minus"         <|>
     pstring "divided by"    <|>
     pstring "multiplied by"
 ```
 
- Here, we use the `<|>` operator to specify that should its left hand parser fail to parse, it should try to parse its right hand parser. Let's send this function to the F# interactive to be able to test it:
+Here, we use the `<|>` operator to specify that should its left hand parser fail to parse, it should try to parse its right hand parser. Let's send this function to the F# interactive to be able to test it:
 
 ```fsharp
   Stopped due to error
  System.Exception: Operation could not be completed due to earlier error
  Value restriction. The value 'parseOperator' has been inferred to have generic type
-     val parseOperator : Parser<string,obj>    
+     val parseOperator : Parser<string,obj>
  Either make the arguments to 'parseOperator' explicit or, if you do not intend for it to be generic, add a type annotation.
 ```
 
@@ -825,8 +825,8 @@ Ouch, we get a very weird-looking error! What's going on? Well, don't worry, thi
 We'll go for the second option, by also sending a `run` call to the F# interactive window:
 
 ```fsharp
-let parseOperator = 
-    pstring "plus"          <|> 
+let parseOperator =
+    pstring "plus"          <|>
     pstring "minus"         <|>
     pstring "divided by"    <|>
     pstring "multiplied by"
@@ -918,7 +918,7 @@ run parseOperations "plus 7 multiplied by -2";;
  val it : ParserResult<(string * int32) list,unit> = Success: [("plus", 7)]
 ```
 
-Hmmm, the parser does match successfully, but only the first combination. Why is that? Well, there is a very simple explanation for this. When parsing the `"plus 3 minus 4"` input, it finds a match (`"plus 3"`). It then tries to parse the remaining input: `" minus 4"`. Did you notice the leading space? That's what prevents the second combination from being matched, as the `parseOperations` parser expects the input to start with the operator, not a space. 
+Hmmm, the parser does match successfully, but only the first combination. Why is that? Well, there is a very simple explanation for this. When parsing the `"plus 3 minus 4"` input, it finds a match (`"plus 3"`). It then tries to parse the remaining input: `" minus 4"`. Did you notice the leading space? That's what prevents the second combination from being matched, as the `parseOperations` parser expects the input to start with the operator, not a space.
 
 To fix this, we can do two things:
 
@@ -950,7 +950,7 @@ The modified `parseOperations` parser now correctly parses a list of operator/op
 The final step is to create the equation parser, which combines the left and right parsers and ignores the pre- and postfix strings:
 
 ```fsharp
-let parseEquation = 
+let parseEquation =
     pstring "What is "
      >>. parseOperand
     .>>  pchar ' '
@@ -967,7 +967,7 @@ run parseEquation "What is -12 divided by 2 divided by -3?";;
 
 run parseEquation "What is 17 minus 6 plus 3?";;
  val it : ParserResult<(int32 * (string * int32) list),unit> =
-   Success: (17, [("minus", 6); ("plus", 3)]) 
+   Success: (17, [("minus", 6); ("plus", 3)])
 ```
 
 #### Integrating the parser
@@ -992,8 +992,8 @@ open FParsec
 
 let parseOperand = pint32
 
-let parseOperator = 
-    pstring "plus"          <|> 
+let parseOperator =
+    pstring "plus"          <|>
     pstring "minus"         <|>
     pstring "divided by"    <|>
     pstring "multiplied by"
@@ -1003,7 +1003,7 @@ let parseOperation =
 
 let parseOperations = sepBy1 parseOperation (pchar ' ')
 
-let parseEquation = 
+let parseEquation =
     pstring "What is "
      >>. parseOperand
     .>>  pchar ' '
@@ -1015,8 +1015,8 @@ let parseToOption parser (input: string) =
     | Success(result, _, _)   -> Some result
     | Failure(errorMsg, _, _) -> None
 
-let applyOperation acc (operation, right) = 
-    match operation with 
+let applyOperation acc (operation, right) =
+    match operation with
     | "plus"          -> acc + right
     | "minus"         -> acc - right
     | "multiplied by" -> acc * right
@@ -1047,11 +1047,11 @@ Simple, an operand is a discriminated union with only a single case: `Int`, whic
 Next, we define the type to represent the four supported operators:
 
 ```fsharp
-type Operator = 
+type Operator =
     | Plus
     | Minus
     | DividedBy
-    | MultipliedBy 
+    | MultipliedBy
 ```
 
 We then define an operation as an `Operator`/`Operand` tuple:
@@ -1068,7 +1068,7 @@ type Equation = Equation of Operand * Operation list
 
 Note that we haven't specified types for the leading and trailing strings, nor for the spaces, as they are not relevant to our problem.
 
-The following step is to use these types in our implementation. 
+The following step is to use these types in our implementation.
 
 ##### Use AST types in parseOperand
 
@@ -1099,7 +1099,7 @@ Perfect.
 Next up: the `parseOperator` parser:
 
 ```fsharp
-let parseOperator = 
+let parseOperator =
     (pstring "plus"         |>> (fun _ -> Plus))         <|>
     (pstring "minus"        |>> (fun _ -> Minus))        <|>
     (pstring "divided by"   |>> (fun _ -> DividedBy))    <|>
@@ -1123,7 +1123,7 @@ run parseOperator "power"
 Everything works, but the pipe operator usage looks a bit odd. This is due to the pipe operator expecting a `string -> 'a` function as its argument. However, we're not interested in the matched `string` value, so we ignore it and return the appropriate operator. As it turns out, the [`>>%`](http://www.quanttec.com/fparsec/reference/primitives.html#members.:62::62::37:) operator simplifies this by not expecting a `string` parameter:
 
 ```fsharp
-let parseOperator = 
+let parseOperator =
     (pstring "plus"          >>% Plus)         <|>
     (pstring "minus"         >>% Minus)        <|>
     (pstring "divided by"    >>% DividedBy)    <|>
@@ -1133,14 +1133,14 @@ let parseOperator =
 Much better, but there is an even better parser: [`stringReturn`](http://www.quanttec.com/fparsec/reference/charparsers.html#members.stringReturn):
 
 ```fsharp
-let parseOperator = 
+let parseOperator =
     stringReturn "plus"          Plus         <|>
     stringReturn "minus"         Minus        <|>
     stringReturn "divided by"    DividedBy    <|>
     stringReturn "multiplied by" MultipliedBy
 ```
 
-Excellent! Clean, simple and fully functional! 
+Excellent! Clean, simple and fully functional!
 
 ##### Use AST types in parseOperation
 
@@ -1169,7 +1169,7 @@ run parseOperations "plus 4 minus 6"
 For the `parseEquation`, we can just pipe the result into the `Equation` type:
 
 ```fsharp
-let parseEquation = 
+let parseEquation =
     pstring "What is "
      >>. parseOperand
     .>>  pchar ' '
@@ -1188,15 +1188,15 @@ As we now use the `pchar ' '` parser in several places, we should really define 
 
 ```fsharp
 let space = pchar ' '
-``` 
+```
 
 ##### Use AST types when solving the solution
 
 The final step is to use the AST types when we solve the equation:
 
 ```fsharp
-let applyOperation acc (Operation (operator, Operand(right))) = 
-    match operator with 
+let applyOperation acc (Operation (operator, Operand(right))) =
+    match operator with
     | Plus         -> acc + right
     | Minus        -> acc - right
     | MultipliedBy -> acc * right
@@ -1206,7 +1206,7 @@ let applyOperation acc (Operation (operator, Operand(right))) =
 let solveEquation (Equation (Operand(left), operations)) = Seq.fold applyOperation left operations
 ```
 
-To simplify our code, we pattern-match directly in our parameters. At this point, we run our tests and they all pass! Hurray. 
+To simplify our code, we pattern-match directly in our parameters. At this point, we run our tests and they all pass! Hurray.
 
 As we now use a discriminated union to represent an operator, the compiler is able to inform us that the catch-all clause will never be reached. We can thus safely remove it. The complete code then becomes:
 
@@ -1215,7 +1215,7 @@ open FParsec
 
 type Operand = Operand of int
 
-type Operator = 
+type Operator =
     | Plus
     | Minus
     | DividedBy
@@ -1229,7 +1229,7 @@ let space = pchar ' '
 
 let parseOperand = pint32 |>> Operand
 
-let parseOperator = 
+let parseOperator =
     stringReturn "plus"          Plus         <|>
     stringReturn "minus"         Minus        <|>
     stringReturn "divided by"    DividedBy    <|>
@@ -1240,7 +1240,7 @@ let parseOperation =
 
 let parseOperations = sepBy1 parseOperation space
 
-let parseEquation = 
+let parseEquation =
     pstring "What is "
      >>. parseOperand
     .>>  space
@@ -1253,8 +1253,8 @@ let parseToOption parser (input: string) =
     | Success(result, _, _)   -> Some result
     | Failure(errorMsg, _, _) -> None
 
-let applyOperation acc (Operation (operator, Operand(right))) = 
-    match operator with 
+let applyOperation acc (Operation (operator, Operand(right))) =
+    match operator with
     | Plus         -> acc + right
     | Minus        -> acc - right
     | MultipliedBy -> acc * right
@@ -1265,7 +1265,7 @@ let solveEquation (Equation (Operand(left), operations)) = Seq.fold applyOperati
 let solve (question: string) =
     parseToOption parseEquation question
     |> Option.map solveEquation
-``` 
+```
 
 To me, what's remarkable is that we defined and implemented an AST for our equation with only very code and hardly any effort.
 
@@ -1275,21 +1275,21 @@ Our previous AST didn't look too bad, but it might not be the best way to descri
 
 ```fsharp
 Equation(
-    Operand 17 * 
-        [ Operation(Minus, Operand 6); 
+    Operand 17 *
+        [ Operation(Minus, Operand 6);
           Operation(Plus, Operand 3) ])
-``` 
+```
 
-What this AST fails to represent, is that our operators always operate on two operands: a left and right part. What we would like is `17 minus 6` to be defined as `Minus (Operand 17, Operand 6)`. The multiple operations in `17 minus 6 plus 3` should be defined as: `Plus (Minus (Operand 17, Operand 6), Operand 3)`. Note that this is an *inside-out* representation of an equation, the left-most part of the equation is the innermost part of the AST. Solving this AST is thus a recursive, *inside-out* algorithm: 
+What this AST fails to represent, is that our operators always operate on two operands: a left and right part. What we would like is `17 minus 6` to be defined as `Minus (Operand 17, Operand 6)`. The multiple operations in `17 minus 6 plus 3` should be defined as: `Plus (Minus (Operand 17, Operand 6), Operand 3)`. Note that this is an _inside-out_ representation of an equation, the left-most part of the equation is the innermost part of the AST. Solving this AST is thus a recursive, _inside-out_ algorithm:
 
-1. `Plus (Minus (Operand 17, Operand 6), Operand 3)`, 
+1. `Plus (Minus (Operand 17, Operand 6), Operand 3)`,
 2. `Plus (Operand 11, Operand 3)`,
-3. `Operand 14` 
+3. `Operand 14`
 
 As it turns out, defining this AST in our code is fantastically simple:
 
 ```fsharp
-type Expression = 
+type Expression =
     | Operand of int
     | Plus of Expression * Expression
     | Minus of Expression * Expression
@@ -1310,8 +1310,8 @@ There is also no need to modify the `parseOperator` function.
 The `parseOperation` is where things start getting interesting. Previously, an operation was just an operator and an operand, but the operand can now also be another operation. Our initial attempt might look like this:
 
 ```fsharp
-let parseOperation = 
-    parseExpression 
+let parseOperation =
+    parseExpression
     .>>  space
     .>>. sepBy1 (parseOperator .>> space .>>. parseExpression) space
     |>> TODO
@@ -1331,20 +1331,20 @@ With this function, we can start using the parser `p`, but defer binding its act
 ```fsharp
 let expr, exprImpl = createParserForwardedToRef()
 
-let parseOperation = 
-    expr 
-    .>>  space 
+let parseOperation =
+    expr
+    .>>  space
     .>>. sepBy1 (parseOperator .>> space .>>. expr) space
     |>> TODO
 
 let parseExpression = parseOperand <|> parseOperation
 
-exprImpl := parseExpression   
+exprImpl := parseExpression
 ```
 
 You can see that we use the `createParserForwardedToRef` to create a parser and its reference cell. We then use this parser in our `parseOperation` function, and later bind the `parseExpression` function to the reference cell's contents. The end result is precisely what we wanted to achieve.
 
-We now have to decide how to process the parsed operation using the `|>>` operator. If you are starting to become more proficient at reading FParsec's operators, you will have guessed that we have to process a tuple. The first item of this tuple is the left expression, and the second item is the list of operator/right expression combinations. The first step is thus:  
+We now have to decide how to process the parsed operation using the `|>>` operator. If you are starting to become more proficient at reading FParsec's operators, you will have guessed that we have to process a tuple. The first item of this tuple is the left expression, and the second item is the list of operator/right expression combinations. The first step is thus:
 
 ```fsharp
 |>> (fun (left, operations) -> TODO)
@@ -1354,9 +1354,9 @@ So how can we merge these two parts into a single expression? Well, we can use a
 
 ```fsharp
 List.fold (fun acc (operator, right) -> operator (acc, right)) left operations
-``` 
+```
 
-The initial state is the left expression. We then process each operator in sequence, wrapping the previous expression in the new operator. The end result will be an `Expression` that is structured *inside-out*, precisely what we want.
+The initial state is the left expression. We then process each operator in sequence, wrapping the previous expression in the new operator. The end result will be an `Expression` that is structured _inside-out_, precisely what we want.
 
 It's probably best to extract the expression building code into its own function. This gives us the following code:
 
@@ -1364,16 +1364,16 @@ It's probably best to extract the expression building code into its own function
 let buildExpression (left, operations) =
     List.fold (fun acc (operator, right) -> operator (acc, right)) left operations
 
-let parseOperation = 
-    expr 
-    .>>  space 
+let parseOperation =
+    expr
+    .>>  space
     .>>. sepBy1 (parseOperator .>> space .>>. expr) space
     |>> buildExpression
 ```
 
 ##### Use updated AST in parseEquation
 
-The `parseEquation` function is very simple, it just uses the `parseOperation` parser to parse the equation: 
+The `parseEquation` function is very simple, it just uses the `parseOperation` parser to parse the equation:
 
 ```fsharp
 let parseEquation = pstring "What is " >>. parseOperation .>> pstring "?"
@@ -1404,7 +1404,7 @@ This is the complete, updated implementation:
 ```fsharp
 open FParsec
 
-type Expression = 
+type Expression =
     | Operand of int
     | Plus of Expression * Expression
     | Minus of Expression * Expression
@@ -1414,7 +1414,7 @@ type Expression =
 let buildExpression (left, operations) =
     List.fold (fun acc (operator, right) -> operator (acc, right)) left operations
 
-// We create a parser forwarder in order to allow us to 
+// We create a parser forwarder in order to allow us to
 // define a recursive parser later on
 let expr, exprImpl = createParserForwardedToRef()
 
@@ -1422,17 +1422,17 @@ let space = pchar ' '
 
 let parseOperand = pint32 |>> Operand
 
-let parseOperator = 
-    stringReturn "plus"          Plus         <|> 
-    stringReturn "minus"         Minus        <|> 
-    stringReturn "divided by"    DividedBy    <|> 
+let parseOperator =
+    stringReturn "plus"          Plus         <|>
+    stringReturn "minus"         Minus        <|>
+    stringReturn "divided by"    DividedBy    <|>
     stringReturn "multiplied by" MultipliedBy
 
-let parseOperation = 
-    expr 
-    .>> space 
+let parseOperation =
+    expr
+    .>> space
     .>>. sepBy1 (parseOperator .>> space .>>. expr) space
-    |>> (fun (left, operations) -> 
+    |>> (fun (left, operations) ->
         List.fold (fun acc (operator, right) -> operator (acc, right)) left operations)
 
 let parseExpression = parseOperand <|> parseOperation
@@ -1522,7 +1522,7 @@ object WordProblem extends RegexParsers {
 This implementation is actually quite similar to our F#, which is in large part due to the fact that we use Scala's parser combinator library. There are two main differences:
 
 1. The case classes are Scala's implementation of discriminated unions. As such, the solution is more object-oriented.
-2. The parser combinator library's operators are different (`^^` instead of `|>>`). 
+2. The parser combinator library's operators are different (`^^` instead of `|>>`).
 
 ### Bonus: Haskell implementation
 
@@ -1537,22 +1537,22 @@ import Control.Applicative ((<|>), (<$>))
 import Data.Attoparsec.Text (Parser, parse, maybeResult, space, decimal, signed, string, sepBy1)
 import Data.Text (pack)
 
-data Expression 
-    = Operand Int 
-    | Plus Expression Expression 
-    | Minus Expression Expression 
-    | DividedBy Expression Expression 
+data Expression
+    = Operand Int
+    | Plus Expression Expression
+    | Minus Expression Expression
+    | DividedBy Expression Expression
     | MultipliedBy Expression Expression
     deriving (Show)
 
-buildExpression :: Expression -> [(Expression -> Expression -> Expression, Expression)] -> Expression 
+buildExpression :: Expression -> [(Expression -> Expression -> Expression, Expression)] -> Expression
 buildExpression = foldl (\acc (operator, right) -> operator acc right)
 
-operandParser :: Parser Expression 
+operandParser :: Parser Expression
 operandParser = Operand <$> signed decimal
 
 operatorParser :: Parser (Expression -> Expression -> Expression)
-operatorParser = 
+operatorParser =
     (string "plus"          >> return Plus)         <|>
     (string "minus"         >> return Minus)        <|>
     (string "divided by"    >> return DividedBy)    <|>
@@ -1562,7 +1562,7 @@ operationParser :: Parser Expression
 operationParser = do
     left       <- (operandParser <|> operationParser) <* space
     operations <- sepBy1 (do
-        operator  <- operatorParser <* space 
+        operator  <- operatorParser <* space
         operation <- operandParser <|> operationParser
         return (operator, operation)) space
     return (buildExpression left operations)
@@ -1585,7 +1585,7 @@ Once again, there are some syntactic differences and some different operators, b
 
 ## Bonus: operator precedence
 
-As a final bonus, we'll look at what we would have to do if the wordy problem *did* respect the [standard operator precedence rules](https://en.wikipedia.org/wiki/Order_of_operations). You might remember that we talked about this when we discussed test 13, which required us to solve `"What is -3 plus 7 multiplied by -2?"`. Due to the exercise ignoring the operator precedence, the result was `(-3 + 7) * -2` = `-8`. However, if we would use the standard convention that multiplication has a higher precedence than addition, the result should be `-3 + (7 * -2)` = `-17`. Let's modify our implementation to follow the standard operator precedence rules.
+As a final bonus, we'll look at what we would have to do if the wordy problem _did_ respect the [standard operator precedence rules](https://en.wikipedia.org/wiki/Order_of_operations). You might remember that we talked about this when we discussed test 13, which required us to solve `"What is -3 plus 7 multiplied by -2?"`. Due to the exercise ignoring the operator precedence, the result was `(-3 + 7) * -2` = `-8`. However, if we would use the standard convention that multiplication has a higher precedence than addition, the result should be `-3 + (7 * -2)` = `-17`. Let's modify our implementation to follow the standard operator precedence rules.
 
 Luckily for us, we don't have to write any operator precedence handling code, FParsec has built-in capabilities for operator precedence handling. The basis is formed by the [`OperatorPrecedenceParser`](http://www.quanttec.com/fparsec/reference/operatorprecedenceparser.html) class. The first step is thus to create an `OperatorPrecedenceParser` instance, supplying it with the type we want it to return (`int`):
 
@@ -1601,7 +1601,7 @@ The next step is to define how terms (which we referred to as operand) should be
 opp.TermParser <- pint32 .>> spaces
 ```
 
-For convenience purposes, we've added the `spaces` parser to our parser, which allows us to just ignore any trailing spaces. 
+For convenience purposes, we've added the `spaces` parser to our parser, which allows us to just ignore any trailing spaces.
 
 We can now specify the operators. There are four types of operators:
 
@@ -1627,7 +1627,7 @@ opp.AddOperator(InfixOperator("multiplied by", spaces, 2, Associativity.Left, fu
 opp.AddOperator(InfixOperator("divided by",    spaces, 2, Associativity.Left, fun x y -> x / y))
 ```
 
-Very simple. You can see that the `"multiplied by"` and `"divided by"` operators have a higher precedence (`2`) than the `"plus"` and `"minus"` operators (`1`). 
+Very simple. You can see that the `"multiplied by"` and `"divided by"` operators have a higher precedence (`2`) than the `"plus"` and `"minus"` operators (`1`).
 
 We can of course simplify the term combination function by just passing the operator:
 
@@ -1670,15 +1670,15 @@ let parseToOption parser (input: string) =
 let solve (question: string) = parseToOption parseEquation question
 ```
 
-If we change the expected result for `"What is -3 plus 7 multiplied by -2?"` to `Some -17` and run the tests again, we'll see that all tests pass! Isn't that amazing for a grand total of 13 lines of code? 
+If we change the expected result for `"What is -3 plus 7 multiplied by -2?"` to `Some -17` and run the tests again, we'll see that all tests pass! Isn't that amazing for a grand total of 13 lines of code?
 
-The fun thing is, if we set the operator precedence of all operators to the same value, we have a fully valid implementation of the wordy problem! 
+The fun thing is, if we set the operator precedence of all operators to the same value, we have a fully valid implementation of the wordy problem!
 
 ## Building a parser combinator from scratch
 
-As we are really starting to appreciate parser combinators, let's build one from scratch! 
+As we are really starting to appreciate parser combinators, let's build one from scratch!
 
-Got you! You didn't *really* think we were going to do that, did you? If you are interested in how one would build a parser combinator library though, I highly recommend the [Understanding Parser Combinators](http://fsharpforfunandprofit.com/posts/understanding-parser-combinators/) series on the fantastic [F# for fun and profit](http://fsharpforfunandprofit.com/) website. In that series, Scott Wlaschin gradually builds a fully functional parser combinator library from scratch.
+Got you! You didn't _really_ think we were going to do that, did you? If you are interested in how one would build a parser combinator library though, I highly recommend the [Understanding Parser Combinators](http://fsharpforfunandprofit.com/posts/understanding-parser-combinators/) series on the fantastic [F# for fun and profit](http://fsharpforfunandprofit.com/) website. In that series, Scott Wlaschin gradually builds a fully functional parser combinator library from scratch.
 
 ## Conclusion
 
@@ -1688,4 +1688,4 @@ The second approach used regular expressions to parse the text. Using more advan
 
 Our final approach used the FParsec parser combinator library. This resulted in a very elegant and concise solution. For fun, we then defined an Abstract Syntax Tree for the syntax being parsed, which was surprisingly easy and required very little code. We then showed how easy it is to define an expression parser with operator precedence rules in FParsec, further simplifying our implementation.
 
-Of the three approaches we tried, the FParsec one was our favorite by far. It resulted in a simple, elegant implementation that was very readable. This was for a large part due to the many useful parsers FParsec includes out of the box. With these parser building blocks, we quickly and easily built our own, more complex parser. All in all, I can wholeheartedly recommend FParsec, whenever you have a text-parsing problem. 
+Of the three approaches we tried, the FParsec one was our favorite by far. It resulted in a simple, elegant implementation that was very readable. This was for a large part due to the many useful parsers FParsec includes out of the box. With these parser building blocks, we quickly and easily built our own, more complex parser. All in all, I can wholeheartedly recommend FParsec, whenever you have a text-parsing problem.

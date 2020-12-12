@@ -1,10 +1,10 @@
 ---
 title: "Create an audio recorder app using Ionic 2"
 date: 2016-09-22
-tags: 
-  - Ionic
-  - Audio
-  - Apps
+tags:
+  - ionic
+  - audio
+  - apps
 url: /2016/09/02/ionic2-audio-recorder/
 ---
 
@@ -20,7 +20,7 @@ The first step to start building Ionic 2 apps is to [install](http://ionicframew
 npm install -g ionic@beta
 ```
 
-Once this command has completed, we can use the [Ionic CLI](http://ionicframework.com/docs/v2/cli/) to scaffold our app: 
+Once this command has completed, we can use the [Ionic CLI](http://ionicframework.com/docs/v2/cli/) to scaffold our app:
 
 ```
 ionic start ionic2-recorder blank --v2
@@ -67,7 +67,7 @@ Then we ask the CLI to show a preview of our app in the browser:
 
 ```
 ionic serve
-``` 
+```
 
 This will result in some [Gulp](http://gulpjs.com/) tasks being run:
 
@@ -106,7 +106,7 @@ When the Gulp tasks have completed, a browser window will open showing a preview
 
 ![Example image](/images/posts/ionic2-audio-recorder/browser-preview-first-version.png)
 
-It may not look much, but consider this: we are previewing our app in a browser! Not on a device or simulator, but a browser! This means that you can develop apps just like you are developing a website. Let's see how that works. 
+It may not look much, but consider this: we are previewing our app in a browser! Not on a device or simulator, but a browser! This means that you can develop apps just like you are developing a website. Let's see how that works.
 
 ## Building the app - beginning
 
@@ -141,16 +141,15 @@ At the moment, there is only one page in our app: the `home` page. Let's see wha
 ```html
 <ion-header>
   <ion-navbar>
-    <ion-title>
-      Ionic Blank
-    </ion-title>
+    <ion-title> Ionic Blank </ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
   The world is your oyster.
   <p>
-    If you get lost, the <a href="http://ionicframework.com/docs/v2">docs</a> will be your guide.
+    If you get lost, the
+    <a href="http://ionicframework.com/docs/v2">docs</a> will be your guide.
   </p>
 </ion-content>
 ```
@@ -164,32 +163,29 @@ As our first modification, let's change the contents of the `<ion-title>` tag:
 ```html
 <ion-header>
   <ion-navbar>
-    <ion-title>
-      Ionic 2 Audio Recorder
-    </ion-title>
+    <ion-title> Ionic 2 Audio Recorder </ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
   The world is your oyster.
   <p>
-    If you get lost, the <a href="http://ionicframework.com/docs/v2">docs</a> will be your guide.
+    If you get lost, the
+    <a href="http://ionicframework.com/docs/v2">docs</a> will be your guide.
   </p>
 </ion-content>
 ```
- 
+
 If we save this file, the CLI will rebuild the app and automatically refresh the browser window to show our app with the modified title:
 
 ![Browser preview of text modification](/images/posts/ionic2-audio-recorder/browser-preview-text-modification.png)
 
-As a first step towards implementing audio recording functionality, let's add a "Start recording" button:  
+As a first step towards implementing audio recording functionality, let's add a "Start recording" button:
 
 ```html
 <ion-header>
   <ion-navbar>
-    <ion-title>
-      Ionic 2 Audio Recorder
-    </ion-title>
+    <ion-title> Ionic 2 Audio Recorder </ion-title>
   </ion-navbar>
 </ion-header>
 
@@ -200,30 +196,30 @@ As a first step towards implementing audio recording functionality, let's add a 
 </ion-content>
 ```
 
-Note that we just use a regular `<button>` tag, as there is no `<ion-button>` component. 
+Note that we just use a regular `<button>` tag, as there is no `<ion-button>` component.
 
-The updated app looks like this:  
+The updated app looks like this:
 
 ![Added button](/images/posts/ionic2-audio-recorder/browser-preview-button.png)
 
 ### Improved device preview
 
-Although our browser preview looks fine, it does have fairly odd dimensions for a mobile device. If you are using Google Chrome, you can do one better. First, right-click in our app preview window and click on `Inspect`. This will open the Developer Tools window. If you look closely, you'll see an icon that looks like a mobile phone in front of a tablet next to the `Elements` tab: 
+Although our browser preview looks fine, it does have fairly odd dimensions for a mobile device. If you are using Google Chrome, you can do one better. First, right-click in our app preview window and click on `Inspect`. This will open the Developer Tools window. If you look closely, you'll see an icon that looks like a mobile phone in front of a tablet next to the `Elements` tab:
 
 ![Developer tools button](/images/posts/ionic2-audio-recorder/browser-developer-tools.png)
 
-If we click on that icon, Google Chrome will render the page *as if it was rendered on a mobile device*, correct screen proportions and all:   
+If we click on that icon, Google Chrome will render the page _as if it was rendered on a mobile device_, correct screen proportions and all:  
 ![Device preview](/images/posts/ionic2-audio-recorder/browser-preview-device.png)
 
-Note that you can also select other devices, change the dimensions, and much more. 
+Note that you can also select other devices, change the dimensions, and much more.
 
 ### Multi-platform preview
 
-One great feature of Ionic is that it will adjust the look and feel of your app depending on the platform it runs on. To easily see the differences between these platforms, you can start the `ionic serve` command with the `--lab` parameter: 
+One great feature of Ionic is that it will adjust the look and feel of your app depending on the platform it runs on. To easily see the differences between these platforms, you can start the `ionic serve` command with the `--lab` parameter:
 
 ```
 ionic serve --lab
-``` 
+```
 
 This results in the preview window showing all three platforms side-by-side:
 
@@ -233,9 +229,9 @@ Although the difference is not huge in this case, the buttons and headers do hav
 
 Note: you should disable the device preview in the Developer Tools for this to display correctly.
 
-## Preparing for recording audio 
-  
-Now it's time to start adding audio recording functionality to our app. Recording audio is a *native* capability: it requires access to a microphone. Therefore, we can't test our recording functionality in the browser, we'll have to use an actual device (or simulator).
+## Preparing for recording audio
+
+Now it's time to start adding audio recording functionality to our app. Recording audio is a _native_ capability: it requires access to a microphone. Therefore, we can't test our recording functionality in the browser, we'll have to use an actual device (or simulator).
 
 To run our app on a device or simulator, Ionic uses [Cordova](http://ionicframework.com/docs/v2/resources/what-is/#cordova). The first step is thus to install Cordova:
 
@@ -249,11 +245,11 @@ Now that Cordova has been installed, the next step is to install the [`ionic-nat
 npm install ionic-native --save
 ```
 
-The purpose of Ionic Native is to provide Ionic-friendly wrappers around Cordova plugins, which in turn allow access to the device's API's (such as the audio recording API). Schematically, it looks something like this: 
+The purpose of Ionic Native is to provide Ionic-friendly wrappers around Cordova plugins, which in turn allow access to the device's API's (such as the audio recording API). Schematically, it looks something like this:
 
 <pre>
 App ==> Ionic Native ==> Cordova Plugin ==> Cordova ==> Device
-</pre>  
+</pre>
 
 The next step is to find the Ionic Native component that allows us to record audio, which is the `MediaPlugin` component. According to its [documentation](http://ionicframework.com/docs/v2/native/mediaplugin/), it depends on the `cordova-plugin-media` [plugin](https://github.com/apache/cordova-plugin-media), which we can install using the CLI:
 
@@ -299,21 +295,21 @@ export class HomePage {
 
 It turns out that an Ionic 2 page is just a regular [Angular 2 component](https://angular.io/docs/ts/latest/guide/architecture.html#!#components), nothing fancy.
 
-Note that the template URL must be relative to the directory where the app's compiled HTML/JavaScript/CSS is located: the `build` directory. 
+Note that the template URL must be relative to the directory where the app's compiled HTML/JavaScript/CSS is located: the `build` directory.
 
 ## Recording audio
 
 To import the `MediaPlugin` component in our `home.ts` file, we add the following `import` statement:
 
 ```javascript
-import { MediaPlugin } from 'ionic-native';
+import { MediaPlugin } from "ionic-native";
 ```
 
-In the `MediaPlugin` component's [documentation](http://ionicframework.com/docs/v2/native/mediaplugin/), we noticed it had a `startRecord` function, exactly what we need! 
+In the `MediaPlugin` component's [documentation](http://ionicframework.com/docs/v2/native/mediaplugin/), we noticed it had a `startRecord` function, exactly what we need!
 
-Note: if you don't like to read documentation, most editors also have code-completion (due to Ionic 2 being written in TypeScript): 
+Note: if you don't like to read documentation, most editors also have code-completion (due to Ionic 2 being written in TypeScript):
 
-![Visual Studio Code code-completion](/images/posts/ionic2-audio-recorder/vscode-code-completion.png) 
+![Visual Studio Code code-completion](/images/posts/ionic2-audio-recorder/vscode-code-completion.png)
 
 Let's add a `startRecording` function to our `HomePage` class, in which we'll start recording audio:
 
@@ -323,8 +319,6 @@ startRecording() {
   media.startRecord();
 }
 ```
-
-
 
 The final step is to call the `startRecording` function when the "Start recording" button is clicked:
 
@@ -343,18 +337,18 @@ EXCEPTION: Error in build/pages/home/home.html:10:12
 ORIGINAL EXCEPTION: ReferenceError: Media is not defined
 </pre>
 
-Hmmm, it appears it cannot find an instance of `Media`. Although this error message is a bit cryptic, there is a very simple explanation: we are trying to use the native audio recording capability, which is not supported in the browser. The solution is simple: we should test this code on a physical device or simulator. 
+Hmmm, it appears it cannot find an instance of `Media`. Although this error message is a bit cryptic, there is a very simple explanation: we are trying to use the native audio recording capability, which is not supported in the browser. The solution is simple: we should test this code on a physical device or simulator.
 
 Silently failing is not very user-friendly though, so let's gracefully handle this error. First, we import the `AlertController` component:
 
 ```javascript
-import { NavController, AlertController } from 'ionic-angular';
+import { NavController, AlertController } from "ionic-angular";
 ```
 
 Next, we require an `AlertController` instance to be [injected](https://angular.io/docs/ts/latest/guide/dependency-injection.html) into our constructor:
 
 ```javascript
-constructor(public navCtrl: NavController, 
+constructor(public navCtrl: NavController,
             public alertCtrl: AlertController) {
 }
 ```
@@ -405,7 +399,7 @@ Installed platforms: ios 4.1.1
 Available platforms: amazon-fireos, android, blackberry10, browser, firefoxos, osx, webos
 ```
 
-Clearly, our app already supports iOS. Note: this was done automatically by the CLI due to us scaffolding the app on a MacBook.   
+Clearly, our app already supports iOS. Note: this was done automatically by the CLI due to us scaffolding the app on a MacBook.
 
 If iOS platform support would not have been installed, we could have installed it manually:
 
@@ -464,7 +458,7 @@ Touch build/emulator/ionic2-recorder.app
 No target specified for emulator. Deploying to iPhone-6s-Plus, 9.3 simulator
 </pre>
 
-The build script doesn't just compile our app to HTML, JavaScript and CSS files, but this time it compiles our app to a real, native iOS app. The reason for this is simple: you can only run native apps in the simulator.    
+The build script doesn't just compile our app to HTML, JavaScript and CSS files, but this time it compiles our app to a real, native iOS app. The reason for this is simple: you can only run native apps in the simulator.
 
 Once the native app has been compiled, the simulator will pop-up and our app is shown:
 
@@ -472,19 +466,19 @@ Once the native app has been compiled, the simulator will pop-up and our app is 
 
 Clicking on the "Start recording" button does not result in an error this time. However, we cannot verify if it actually recorded anything, so let's fix this.
 
-## Adding audio playback support  
+## Adding audio playback support
 
 To allow us to playback the recorded audio, we need to add several functions to the `HomePage` class:
 
 - A function to stop recording (which will save the recorded audio to file).
 - A function to playback the saved recording.
-- A function to stop the playback of the saved recording. 
+- A function to stop the playback of the saved recording.
 
 As all these functions need access to the same `MediaPlugin` instance, let's store it in a private field:
 
 ```javascript
 export class HomePage {
-  media: MediaPlugin = new MediaPlugin('../Library/NoCloud/recording.wav');
+  media: MediaPlugin = new MediaPlugin("../Library/NoCloud/recording.wav");
 }
 ```
 
@@ -549,9 +543,9 @@ Let's run our app again:
 
 ![Simulator playback](/images/posts/ionic2-audio-recorder/ios-simulator-error.png)
 
-Unfortunately, the screen is blank, indicating that an error occured. As it turns out, this error is due to the `MediaPlugin` instance being created when the class is constructed. At that point, the native media plugin will not yet have been loaded, so creating the `MediaPlugin` instance throws an error. 
+Unfortunately, the screen is blank, indicating that an error occured. As it turns out, this error is due to the `MediaPlugin` instance being created when the class is constructed. At that point, the native media plugin will not yet have been loaded, so creating the `MediaPlugin` instance throws an error.
 
-So what *is* the right time to create our shared `MediaPlugin` instance? Well, let's look at the [lifecycle events](http://ionicframework.com/docs/v2/api/components/nav/NavController/#lifecycle-events) for an Ionic component (in order of occurance):
+So what _is_ the right time to create our shared `MediaPlugin` instance? Well, let's look at the [lifecycle events](http://ionicframework.com/docs/v2/api/components/nav/NavController/#lifecycle-events) for an Ionic component (in order of occurance):
 
 - `ionViewLoaded`: runs when the page has loaded.
 - `ionViewWillEnter`: runs when the page is about to enter and become the active page.
@@ -575,7 +569,7 @@ export class HomePage {
 }
 ```
 
-If we run our app, the GUI is shown this time, but clicking on the "Start recording" button still issues an error: 
+If we run our app, the GUI is shown this time, but clicking on the "Start recording" button still issues an error:
 
 ![Simulator playback](/images/posts/ionic2-audio-recorder/ios-simulator-playback-error.png)
 
@@ -585,13 +579,13 @@ Moving the initialization to `ionViewWillEnter` also results in the same error, 
 
 This time, everything works (provided we click on the buttons in the right order). We can record and playback audio in our Ionic 2 app, using just a couple of lines of JavaScript code!
 
-As a funny side note, the official [iOS simulator documentation](https://developer.apple.com/library/ios/documentation/IDEs/Conceptual/iOS_Simulator_Guide/TestingontheiOSSimulator/TestingontheiOSSimulator.html#//apple_ref/doc/uid/TP40012848-CH4-SW1) explicitly states that the microphone *can't* be used in the simulator :)
+As a funny side note, the official [iOS simulator documentation](https://developer.apple.com/library/ios/documentation/IDEs/Conceptual/iOS_Simulator_Guide/TestingontheiOSSimulator/TestingontheiOSSimulator.html#//apple_ref/doc/uid/TP40012848-CH4-SW1) explicitly states that the microphone _can't_ be used in the simulator :)
 
 ### Running in a specific simulator
 
-Each time we ran our app in the simulator, it opened the default simulator. However, it is also possible to specify the simulator that should be used. 
+Each time we ran our app in the simulator, it opened the default simulator. However, it is also possible to specify the simulator that should be used.
 
-The first step is to get a list of all (iOS) simulator device types. We can do this with the following command: 
+The first step is to get a list of all (iOS) simulator device types. We can do this with the following command:
 
 ```
 ios-sim showdevicetypes
@@ -631,13 +625,13 @@ The emulator will now load our app in an iPad Air simulator running iOS 8.1:
 
 Although running our app in a simulator is fine, the ultimate test would be to run our app on a physical device. As I want to run our app on my iPhone, I need to make sure our app supports the iOS platform. Luckily for us, we already allowed our app to run on iOS when we ran our app in the simulator.
 
-After having connected our iPhone to our MacBook, we then run: 
+After having connected our iPhone to our MacBook, we then run:
 
 ```
 ionic run ios
 ```
 
-This should run our app on our device, but even though my device *is* recognized, an error occurs:
+This should run our app on our device, but even though my device _is_ recognized, an error occurs:
 
 <pre>
 [....] Waiting up to 1 seconds for iOS device to be connected
@@ -655,7 +649,7 @@ After some [Googling](https://github.com/driftyco/ionic-cli/issues/1197), I foun
 ionic run ios --device
 ```
 
-Similar to running our app on the simulator, our app is compiled to a native app: 
+Similar to running our app on the simulator, our app is compiled to a native app:
 
 <pre>
 Building project  : /Users/erikschierboom/Programming/ionic2-recorder/platforms/ios/Audio Recorder.xcodeproj
@@ -764,7 +758,7 @@ If your app requires a build step, you may want to ensure it runs before upload.
 This warning indicates that the `upload` Gulp task does not depend on any other task. If you want to be ensure that you'll always upload the latest version of your app, you need to make sure that the `upload` task depends on the `build` task. Fixing this is easy, just add the following line to `gulpfile.js`:
 
 ```javascript
-gulp.task('upload:before', ['build']);
+gulp.task("upload:before", ["build"]);
 ```
 
 Having uploaded our app, let's open the Ionic View app to see what it looks like:
@@ -775,7 +769,7 @@ We can see that we have access to one app: the one we just uploaded. If we click
 
 ![Ionic View app menu](/images/posts/ionic2-audio-recorder/iphone-ionic-view-menu.png)
 
-The available options are fairly straightforward. We'll use the "View app" button to run our app: 
+The available options are fairly straightforward. We'll use the "View app" button to run our app:
 
 ![App running in Ionic View](/images/posts/ionic2-audio-recorder/iphone-ionic-view-running.png)
 
@@ -813,13 +807,13 @@ At the moment, the audio recording and playback functionality was added directly
 First, we'll create a `services` directory in our `app` directory. Within the `services` directory, create a TypeScript file named `audiorecorder.ts`, in which we'll define an `AudioRecorder` class. Extracting the audio recording functionality from our `HomePage` class, we end up with the following class:
 
 ```javascript
-import { MediaPlugin } from 'ionic-native';
+import { MediaPlugin } from "ionic-native";
 
 export class AudioRecorder {
   media: MediaPlugin;
 
   constructor() {
-    this.media = new MediaPlugin('../Library/NoCloud/recording.wav');
+    this.media = new MediaPlugin("../Library/NoCloud/recording.wav");
   }
 
   startRecording() {
@@ -840,7 +834,7 @@ export class AudioRecorder {
 }
 ```
 
-Looks quite nice, agreed? There is another, obvious refactoring. The `MediaPlugin` instance only really needs to be created when it is first used, so let's delay creating the `MediaPlugin` instance: 
+Looks quite nice, agreed? There is another, obvious refactoring. The `MediaPlugin` instance only really needs to be created when it is first used, so let's delay creating the `MediaPlugin` instance:
 
 ```javascript
 export class AudioRecorder {
@@ -848,7 +842,7 @@ export class AudioRecorder {
 
   get MediaPlugin(): MediaPlugin {
     if (this.mediaPlugin == null) {
-      this.mediaPlugin = new MediaPlugin('../Library/NoCloud/recording.wav');
+      this.mediaPlugin = new MediaPlugin("../Library/NoCloud/recording.wav");
     }
 
     return this.mediaPlugin;
@@ -886,7 +880,7 @@ export class AudioRecorder {
 With all these changes, our `HomePage` class becomes a lot easier. First, we can replace the import of the `MediaPlugin` class with an import of our `AudioRecorder` class:
 
 ```javascript
-import { AudioRecorder } from '../../services/audiorecorder';
+import { AudioRecorder } from "../../services/audiorecorder";
 ```
 
 If you are wondering how we arrived at this relative import path, consider the current layout of the `app` directory:
@@ -915,8 +909,8 @@ Next, we'll add the `AudioRecorder` to the list of providers for our class (to e
   providers: [AudioRecorder]
 })
 export class HomePage {
-  
-  constructor(public navCtrl: NavController, 
+
+  constructor(public navCtrl: NavController,
               public alertCtrl: AlertController,
               public audioRecorder: AudioRecorder) {
   }
@@ -964,10 +958,10 @@ stopPlayback() {
   catch (e) {
     this.showAlert('Could not stop playing recording.');
   }
-}  
+}
 ```
 
-If we test our refactored app, we'll find it still works as expected, but our code now has much better separation of concerns. 
+If we test our refactored app, we'll find it still works as expected, but our code now has much better separation of concerns.
 
 ## Updating the user-interface
 
@@ -1012,20 +1006,40 @@ export class AudioRecorder {
 }
 ```
 
-The last step is to dynamically enable and disable buttons depending on the audio recorder's state. For that, we'll modify the `home.html` file: 
+The last step is to dynamically enable and disable buttons depending on the audio recorder's state. For that, we'll modify the `home.html` file:
 
 ```html
 <p>
-  <button (click)="startRecording()" [disabled]="audioRecorder.state != AudioRecorderState.Ready">Start recording</button>
+  <button
+    (click)="startRecording()"
+    [disabled]="audioRecorder.state != AudioRecorderState.Ready"
+  >
+    Start recording
+  </button>
 </p>
 <p>
-  <button (click)="stopRecording()" [disabled]="audioRecorder.state != AudioRecorderState.Recording">Stop recording</button>
+  <button
+    (click)="stopRecording()"
+    [disabled]="audioRecorder.state != AudioRecorderState.Recording"
+  >
+    Stop recording
+  </button>
 </p>
 <p>
-  <button (click)="startPlayback()" [disabled]="audioRecorder.state != AudioRecorderState.Recorded">Start playback</button>
+  <button
+    (click)="startPlayback()"
+    [disabled]="audioRecorder.state != AudioRecorderState.Recorded"
+  >
+    Start playback
+  </button>
 </p>
 <p>
-  <button (click)="stopPlayback()" [disabled]="audioRecorder.state != AudioRecorderState.Playing">Stop playback</button>
+  <button
+    (click)="stopPlayback()"
+    [disabled]="audioRecorder.state != AudioRecorderState.Playing"
+  >
+    Stop playback
+  </button>
 </p>
 ```
 
@@ -1039,7 +1053,10 @@ ORIGINAL EXCEPTION: TypeError: Cannot read property 'Ready' of undefined
 The problem is that our view doesn't know about the `AudioRecorderState` enum. To fix this, we'll also import the `AudioRecorderState` in our `home.ts` file:
 
 ```javascript
-import { AudioRecorder, AudioRecorderState } from '../../services/audiorecorder';
+import {
+  AudioRecorder,
+  AudioRecorderState,
+} from "../../services/audiorecorder";
 ```
 
 Then, we add it as a field to our `HomePage` class, which allows our view to access its values:
@@ -1064,16 +1081,40 @@ The finishing touch is to give each button its own color and icon. Let's start w
 
 ```html
 <p>
-  <button (click)="startRecording()" class="buttton-start-recording" [disabled]="audioRecorder.state != AudioRecorderState.Ready">Start recording</button>
+  <button
+    (click)="startRecording()"
+    class="buttton-start-recording"
+    [disabled]="audioRecorder.state != AudioRecorderState.Ready"
+  >
+    Start recording
+  </button>
 </p>
 <p>
-  <button (click)="stopRecording()" class="buttton-stop-recording" [disabled]="audioRecorder.state != AudioRecorderState.Recording">Stop recording</button>
+  <button
+    (click)="stopRecording()"
+    class="buttton-stop-recording"
+    [disabled]="audioRecorder.state != AudioRecorderState.Recording"
+  >
+    Stop recording
+  </button>
 </p>
 <p>
-  <button (click)="startPlayback()" class="buttton-start-playback" [disabled]="audioRecorder.state != AudioRecorderState.Recorded">Start playback</button>
+  <button
+    (click)="startPlayback()"
+    class="buttton-start-playback"
+    [disabled]="audioRecorder.state != AudioRecorderState.Recorded"
+  >
+    Start playback
+  </button>
 </p>
 <p>
-  <button (click)="stopPlayback()" class="buttton-stop-playback" [disabled]="audioRecorder.state != AudioRecorderState.Playing">Stop playback</button>
+  <button
+    (click)="stopPlayback()"
+    class="buttton-stop-playback"
+    [disabled]="audioRecorder.state != AudioRecorderState.Playing"
+  >
+    Stop playback
+  </button>
 </p>
 ```
 
@@ -1082,38 +1123,38 @@ Next, we'll create the styles for these newly added classes. We'll do that in `h
 ```css
 .buttton-start-recording,
 .buttton-start-recording.activated {
-    background-color: red;
+  background-color: red;
 }
 
 .buttton-start-recording:hover:not(.disable-hover) {
-    background-color: #ff6666;
+  background-color: #ff6666;
 }
 
 .buttton-stop-recording,
 .buttton-stop-recording.activated {
-    background-color: orange;
+  background-color: orange;
 }
 
 .buttton-stop-recording:hover:not(.disable-hover) {
-    background-color: #ffc966;
+  background-color: #ffc966;
 }
 
 .buttton-start-playback,
 .buttton-start-playback.activated {
-    background-color: green;
+  background-color: green;
 }
 
 .buttton-start-playback:hover:not(.disable-hover) {
-    background-color: #80ff80;
+  background-color: #80ff80;
 }
 
 .buttton-stop-playback,
 .buttton-stop-playback.activated {
-    background-color: blue;
+  background-color: blue;
 }
 
 .buttton-stop-playback:hover:not(.disable-hover) {
-    background-color: #387ef5;
+  background-color: #387ef5;
 }
 ```
 
@@ -1125,36 +1166,52 @@ Our final improvement is to add [icons](http://ionicframework.com/docs/v2/ionico
 
 ```html
 <p>
-  <button (click)="startRecording()" class="buttton-start-recording" [disabled]="audioRecorder.state != AudioRecorderState.Ready">
+  <button
+    (click)="startRecording()"
+    class="buttton-start-recording"
+    [disabled]="audioRecorder.state != AudioRecorderState.Ready"
+  >
     <ion-icon name="microphone"></ion-icon>
     Start recording
   </button>
 </p>
 <p>
-  <button (click)="stopRecording()" class="buttton-stop-recording" [disabled]="audioRecorder.state != AudioRecorderState.Recording">
+  <button
+    (click)="stopRecording()"
+    class="buttton-stop-recording"
+    [disabled]="audioRecorder.state != AudioRecorderState.Recording"
+  >
     <ion-icon name="mic-off"></ion-icon>
     Stop recording
   </button>
 </p>
 <p>
-  <button (click)="startPlayback()" class="buttton-start-playback" [disabled]="audioRecorder.state != AudioRecorderState.Recorded">
+  <button
+    (click)="startPlayback()"
+    class="buttton-start-playback"
+    [disabled]="audioRecorder.state != AudioRecorderState.Recorded"
+  >
     <ion-icon name="play"></ion-icon>
     Start playback
   </button>
 </p>
 <p>
-  <button (click)="stopPlayback()" class="buttton-stop-playback" [disabled]="audioRecorder.state != AudioRecorderState.Playing">
+  <button
+    (click)="stopPlayback()"
+    class="buttton-stop-playback"
+    [disabled]="audioRecorder.state != AudioRecorderState.Playing"
+  >
     <ion-icon name="square"></ion-icon>
     Stop playback
   </button>
 </p>
-```  
+```
 
 Let's preview these changes using the multi-platform preview mode:
 
 ![Button icons](/images/posts/ionic2-audio-recorder/browser-button-icons.png)
 
-Looks much better, right? Those of you with a keen eye may have noticed that some icons will look different between platforms, which Ionic does automatically to better match each platform's look-and-feel.  
+Looks much better, right? Those of you with a keen eye may have noticed that some icons will look different between platforms, which Ionic does automatically to better match each platform's look-and-feel.
 
 ## Source code
 
@@ -1162,7 +1219,7 @@ If you'd like to test the application yourself, the full source code can be foun
 
 ## Conclusion
 
-Building native apps can be frustrating due to the lack of code sharing between the various platforms. With Ionic 2, you can build native mobile apps for multiple platforms from a single code base, using just HTML, JavaScript and CSS. This makes building an app quite similar to building a regular website. 
+Building native apps can be frustrating due to the lack of code sharing between the various platforms. With Ionic 2, you can build native mobile apps for multiple platforms from a single code base, using just HTML, JavaScript and CSS. This makes building an app quite similar to building a regular website.
 
 Building our audio recorder app using Ionic 2 app turned out to be quite easy. Using just HTML and Ionic's custom components, we created an app that looks like a proper native app. Even building the audio recording code was not very hard, due to Ionic Native giving us an easy to use API to handle audio with.
 

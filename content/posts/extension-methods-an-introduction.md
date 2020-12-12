@@ -1,10 +1,10 @@
 ---
 title: "Extension methods - an introduction"
 date: 2014-06-23
-tags: 
-  - C#
-  - .NET
-  - Extension methods
+tags:
+  - csharp
+  - dotnet
+  - extension-methods
 ---
 
 Extension methods were introduced in C# 3.0. The [MSDN](http://msdn.microsoft.com/en-us/library/bb308966.aspx#csharp3.0overview_topic3) defines it as follows:
@@ -57,9 +57,10 @@ How does this work? Well, behind the scenes extension method calls are converted
 StringExtensions.HasEvenLength("abcd")
 ```
 
-Extension methods are thus nothing more that static methods in disguise. As such, everything you know about static methods also applies to extension methods. 
+Extension methods are thus nothing more that static methods in disguise. As such, everything you know about static methods also applies to extension methods.
 
 ## Example 2: multiple parameters
+
 Our previous example used a single parameter, but it is perfectly valid to create extension methods with more than one parameter (but not with less obviously):
 
 ```csharp
@@ -81,6 +82,7 @@ StringExtensions.StartsWithFromIndex("Hello, World", "World", 7)
 ```
 
 ## Example 3: extending value types
+
 Extension methods can be defined for any type. For example, if you often convert integers to their hexadecimal representation, you could define this extension method:
 
 ```csharp
@@ -90,12 +92,13 @@ public static class IntExtensions
     {
         return val.ToString("X");
     }
-} 
+}
 
 10.ToHex() // Returns A
 ```
 
 ## Example 4: using generics
+
 Extension methods can also use generics. As an example, here's an extension method to convert an `IEnumerable<T>` to an `HashSet<T>`:
 
 ```csharp
@@ -108,7 +111,7 @@ public static class EnumerableExtensions
 }
 
 // Returns a HashSet<int> containing 1, 2 and 3
-new int[] { 1, 2, 2, 3, 3 }.ToSet(); 
+new int[] { 1, 2, 2, 3, 3 }.ToSet();
 ```
 
 ## Limitations
@@ -121,7 +124,7 @@ new int[] { 1, 2, 2, 3, 3 }.ToSet();
 
 - If an extension method has the exact same signature as a method defined in the extended type, the extension method will never be called.
 
-- When you import a namespace containing extension methods, you automatically include *all* of them. You can't choose the ones you want to import, it is all or nothing.
+- When you import a namespace containing extension methods, you automatically include _all_ of them. You can't choose the ones you want to import, it is all or nothing.
 
 ## Warning: prevent overuse
 
@@ -129,7 +132,7 @@ Once people learn about extension methods, they often convert all their static h
 
 To prevent this, ask yourself the following simple questions when deciding if a method should be defined as an extension method:
 
-- Does it make sense as an extension method? Not all methods work well as instance methods. If so, don't make it an extension method. 
+- Does it make sense as an extension method? Not all methods work well as instance methods. If so, don't make it an extension method.
 
 - How often do I use this method? If the method is not used often, don't make it an extension method.
 
