@@ -1,11 +1,11 @@
 ---
-title: "Building a JSON query language - part 3: interpreting"
+title: "Building a JSON query language - part 3: interpreter"
 date: 2020-02-01
 tags:
   - csharp
   - domain-specific-language
   - superpower
-  - interpreting
+  - interpreter
 ---
 
 ## Conclusion
