@@ -28,6 +28,7 @@ So what features should our language have? Let's compile a list of the things we
 - Select an element of a JSON array.
 - Return the length of a JSON string or array.
 - Test if a property or element exists.
+- Pipe the output of one query into another query.
 
 ## Syntax
 
