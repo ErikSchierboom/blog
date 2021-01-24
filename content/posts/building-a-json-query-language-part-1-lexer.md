@@ -14,7 +14,8 @@ Programming languages and their design have always been one of my favorite topic
 
 Before defining its syntax, let's set some goals for our language:
 
-- Concise: the syntax should be short and simple.
+- Simple: the syntax should be easy to read.
+- Concise: the syntax should be short
 - Composable: queries can easily be composed into bigger queries.
 - Pure: mutation or side-effects are not allowed.
 
@@ -32,7 +33,7 @@ So what features should our language have? Let's compile a list of the things we
 
 ## Syntax
 
-Our next step is to define the syntax for our language. This step is usually a quite iterative one, where you keep trying different things to see if they work.
+Our next step is to define the syntax for our language. This step is usually very iterative, where one keeps trying different things to see if they work.
 
 ## Lexer
 
@@ -42,6 +43,74 @@ TODO: difference lexer/tokenizer
 
 https://github.com/datalust/superpower
 https://github.com/sprache/Sprache
+
+## Implementation
+
+```csharp
+using Superpower.Display;
+
+namespace Spil.Language
+{
+    public enum TokenKind
+    {
+        [Token(Example = ".", Category = "token")]
+        Dot,
+
+        [Token(Example = "[", Category = "token")]
+        OpenBracket,
+
+        [Token(Example = "]", Category = "token")]
+        CloseBracket,
+
+        [Token(Example = "|", Category = "token")]
+        Pipe,
+
+        [Token(Example = "name", Category = "identifier")]
+        Identifier,
+
+        [Token(Example = "1", Category = "literal")]
+        Number,
+
+        [Token(Example = "length", Category = "keyword")]
+        LengthKeyword,
+
+        [Token(Example = "exists", Category = "keyword")]
+        ExistsKeyword
+    }
+}
+```
+
+```csharp
+using Superpower;
+using Superpower.Model;
+using Superpower.Parsers;
+using Superpower.Tokenizers;
+
+namespace Spil.Language
+{
+    public static class Lexer
+    {
+        private static readonly Tokenizer<TokenKind> TokenizerImpl = CreateTokenizer();
+
+        private static Tokenizer<TokenKind> CreateTokenizer() =>
+            new TokenizerBuilder<TokenKind>()
+                .Ignore(Span.WhiteSpace)
+                .Match(Numerics.IntegerInt32, TokenKind.Number)
+                .Match(Span.EqualTo("."), TokenKind.Dot)
+                .Match(Span.EqualTo("["), TokenKind.OpenBracket)
+                .Match(Span.EqualTo("]"), TokenKind.CloseBracket)
+                .Match(Span.EqualTo("|"), TokenKind.Pipe)
+                .Match(Span.EqualTo("length"), TokenKind.LengthKeyword)
+                .Match(Span.EqualTo("exists"), TokenKind.ExistsKeyword)
+                .Match(Span.EqualTo("first"), TokenKind.FirstKeyword)
+                .Match(Character.Letter.AtLeastOnce(), TokenKind.Identifier)
+                .Build();
+
+        public static Result<TokenList<TokenKind>> Tokenize(string source) =>
+            TokenizerImpl.TryTokenize(source.Trim());
+    }
+}
+```
 
 ## Conclusion
 
