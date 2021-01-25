@@ -8,37 +8,82 @@ tags:
   - lexer
 ---
 
-Programming languages and their design have always been one of my favorite topics. In this series of blog posts, we'll build our own JSON query language.
+Programming languages and their design have always been one of my favorite topics. In this series of blog posts, we'll build our own [JSON](https://www.json.org/json-en.html) query language from scratch (with a little help).
 
 ## Goals
 
 Before defining its syntax, let's set some goals for our language:
 
-- Simple: the syntax should be easy to read.
-- Concise: the syntax should be short
-- Composable: queries can easily be composed into bigger queries.
-- Pure: mutation or side-effects are not allowed.
+- Simple: there should be little syntax
+- Readable: code should be easy to understand
+- Concise: the syntax should be compact
+- Composable: queries can easily be composed into bigger queries
+- Pure: side-effects are not allowed
+- Immutable: mutation is forbidden
 
-We'll keep these goals in mind while designing our language.
+Keeping these goals in mind, we can move on to the next phase.
 
 ## Features
 
-Having determined its goals, let's define our language's features:
+A language without any features is quite boring, so let's define what we want to do with our language:
 
-- Select a property of a JSON object.
-- Select an element of a JSON array.
-- Return the length of a JSON string or array.
-- Test if a property or element exists.
-- Pipe the output of one query into another query.
+- Select a member of a JSON object
+- Select an element of a JSON array
+- Return the length of a JSON string or array
+- Test if a member or element exists
+- Combine multiple queries into a single query
 
 As can be seen, we'll keep it simple for demonstration purposes.
 
 ## Syntax
 
-Our next step is to define the syntax for our language. This step is usually quite iterative, where one keeps trying different things to see if they work. There is definitely a subjective aspect at work here: what is a beautiful syntax to some, might be off-putting to others.
+Our next step is to define the syntax for our language. This step is usually quite iterative, where one keeps trying different things to see if they work. There is definitely a subjective aspect at work here: what is a beautiful syntax to some, might be off-putting to others. Having tried out tons of different syntaxes, here's what syntax we've decided on for our language's features.
 
-TODO:
-https://www.w3.org/TR/REC-xml/#sec-notation
+### Select member of a JSON object
+
+Members of a JSON object are accessed using the dot (`.`) character followed by the member's name. Using the same syntax in our language allows users to re-use their existing understanding of how to work with JSON objects. This makes the language easier to learn and applies the [principle of least surprise](https://en.wikipedia.org/wiki/Principle_of_least_astonishment), a very important design principle.
+
+Syntax: `.<field>`
+
+Examples: `.title`, `.year`, `.awards`
+
+### Select an element of a JSON array
+
+Once again, we'll re-use JSON's syntax, this time for accessing array elements:
+
+Syntax: `.[<index>]`
+
+Examples: `.[0]`, `.[1]`, `.[239]`
+
+### Return the length of a JSON string or array
+
+This is the first features for which there is no built-in JSON function. To keep with our simple, concise and readable goals, we'll introduce a `length` keyword.
+
+Syntax: `length`
+
+Example: `length`
+
+### Test if a member or element exists
+
+Once again, we have feature for which there is no built-in JSON function. Using the same argumentation as for the length feature, we'll introduce an `exists` keyword.
+
+Syntax: `exists`
+
+Example: `exists`
+
+### Combine multiple queries into a single query
+
+To combine multiple queries into a single query, we'll need to pass the output of one invocation as input of the next invocation. As this is exactly what UNIX piping does, we'll use the same character: the pipe (`|`). for this, as this both neatly fits with the UNIX syntax that most people will be familiar with _and_ has the added benefit of being very concise.
+
+Syntax: `<expr1> | <expr2>`
+
+Examples: `.title | length`, `.genres | .[0]`, `.directors | .[1] | .name`
+
+## Specification
+
+Now that we have an idea what the syntax for our language looks like, it is time for a formal specification. We need a more formal specification as there are still open questions, like what characters are allowed in member names or whether negative indexes are allowed.
+
+There are several formats to define a language's syntax, but one of the most used is [Extended Backus-Naur Form](https://en.wikipedia.org/wiki/Extended_Backus%E2%80%93Naur_form). We'll define our syntax in the [W3C EBNF dialect](https://www.w3.org/TR/REC-xml/#sec-notation), which adds support for ranges and regular-expression like multiplicity modifiers.
 
 ```bnf
 letter ::= [a-zA-Z]
