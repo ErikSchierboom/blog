@@ -23,7 +23,7 @@ We'll keep these goals in mind while designing our language.
 
 ## Features
 
-So what features should our language have? Let's compile a list of the things we want our language to support:
+Having determined its goals, let's define our language's features:
 
 - Select a property of a JSON object.
 - Select an element of a JSON array.
@@ -31,9 +31,27 @@ So what features should our language have? Let's compile a list of the things we
 - Test if a property or element exists.
 - Pipe the output of one query into another query.
 
+As can be seen, we'll keep it simple for demonstration purposes.
+
 ## Syntax
 
-Our next step is to define the syntax for our language. This step is usually very iterative, where one keeps trying different things to see if they work.
+Our next step is to define the syntax for our language. This step is usually quite iterative, where one keeps trying different things to see if they work. There is definitely a subjective aspect at work here: what is a beautiful syntax to some, might be off-putting to others.
+
+TODO:
+https://www.w3.org/TR/REC-xml/#sec-notation
+
+```bnf
+letter ::= [a-zA-Z]
+digit  ::= [0-9]
+
+field  ::= '.' letter+;
+index  ::= '.[' digit+ ']'
+length ::= 'length'
+exists ::= 'exists'
+
+expr   ::= field | index | exists
+query  ::= expr ('|' expr)*
+```
 
 ## Lexer
 
