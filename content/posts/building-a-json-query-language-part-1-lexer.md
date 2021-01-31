@@ -8,11 +8,11 @@ tags:
   - lexer
 ---
 
-Programming languages and their design have always been one of my favorite topics. In this series of blog posts, we'll build our own [JSON](https://www.json.org/json-en.html) query language from scratch (with a little help).
+Programming languages and their design have always been one of my favorite topics. In this series of blog posts, we'll build our own [JSON](https://www.json.org/json-en.html) query language from scratch (using some superpower(s)).
 
 ## Goals
 
-Before defining its syntax, let's set some goals for our language:
+Before defining the syntax of our language, let's set some goals:
 
 - Simple: there should be little syntax
 - Readable: code should be easy to understand
@@ -25,7 +25,7 @@ Keeping these goals in mind, we can move on to the next phase.
 
 ## Features
 
-A language without any features is quite boring, so let's define what we want to do with our language:
+Next up is specifying what features we want our language to support:
 
 - Select a member of a JSON object
 - Select an element of a JSON array
@@ -33,21 +33,21 @@ A language without any features is quite boring, so let's define what we want to
 - Test if a member or element exists
 - Combine multiple queries into a single query
 
-As can be seen, we'll keep it simple for demonstration purposes.
+As can be seen, we'll keep it simple for now.
 
 ## Syntax
 
-Our next step is to define the syntax for our language. This step is usually quite iterative, where one keeps trying different things to see if they work. There is definitely a subjective aspect at work here: what is a beautiful syntax to some, might be off-putting to others. Having tried out tons of different syntaxes, here's what syntax we've decided on for our language's features.
+Our next step is to define the syntax for our language. This step is usually quite iterative, where one tries different things to see if they work. There is definitely a subjective aspect at work here too: what is a beautiful syntax to some, might be off-putting to others. Having tried out tons of different syntaxes, here's what syntax we've decided on for each of our language's features.
 
-### Select member of a JSON object
+### Syntax for: select member of a JSON object
 
-Members of a JSON object are accessed using the dot (`.`) character followed by the member's name. Using the same syntax in our language allows users to re-use their existing understanding of how to work with JSON objects. This makes the language easier to learn and applies the [principle of least surprise](https://en.wikipedia.org/wiki/Principle_of_least_astonishment), a very important design principle.
+The [JSON spec](https://www.json.org/json-en.html) specifies that members of a JSON object are accessed using the dot (`.`) character followed by the member's name. Using the same syntax in our language allows users to re-use their existing understanding of how to work with JSON objects. This makes the language easier to learn and applies the [principle of least surprise](https://en.wikipedia.org/wiki/Principle_of_least_astonishment), a very important design principle.
 
 Syntax: `.<field>`
 
 Examples: `.title`, `.year`, `.awards`
 
-### Select an element of a JSON array
+### Syntax for: select an element of a JSON array
 
 Once again, we'll re-use JSON's syntax, this time for accessing array elements:
 
@@ -55,7 +55,7 @@ Syntax: `.[<index>]`
 
 Examples: `.[0]`, `.[1]`, `.[239]`
 
-### Return the length of a JSON string or array
+### Syntax for: return the length of a JSON string or array
 
 This is the first features for which there is no built-in JSON function. To keep with our simple, concise and readable goals, we'll introduce a `length` keyword.
 
@@ -71,9 +71,9 @@ Syntax: `exists`
 
 Example: `exists`
 
-### Combine multiple queries into a single query
+### Syntax for: combine multiple queries into a single query
 
-To combine multiple queries into a single query, we'll need to pass the output of one invocation as input of the next invocation. As this is exactly what UNIX piping does, we'll use the same character: the pipe (`|`). for this, as this both neatly fits with the UNIX syntax that most people will be familiar with _and_ has the added benefit of being very concise.
+To combine multiple queries into a single query, we'll need to pass the output of one invocation as input to the next invocation. As this is exactly what UNIX piping does, we'll use the same character: the pipe (`|`). Anyone familiar with UNIX systems will understand what this character will do. It also has the added benefit of being very concise.
 
 Syntax: `<expr1> | <expr2>`
 
@@ -81,20 +81,61 @@ Examples: `.title | length`, `.genres | .[0]`, `.directors | .[1] | .name`
 
 ## Specification
 
-Now that we have an idea what the syntax for our language looks like, it is time for a formal specification. We need a more formal specification as there are still open questions, like what characters are allowed in member names or whether negative indexes are allowed.
+Now that we have a rough idea what the syntax for our language looks like, it is time for a more formal specification. The formal specification will answer any open questions, such as whether negative indexes are supported or what characters can be used in field names.
 
-There are several formats to define a language's syntax, but one of the most used is [Extended Backus-Naur Form](https://en.wikipedia.org/wiki/Extended_Backus%E2%80%93Naur_form). We'll define our syntax in the [W3C EBNF dialect](https://www.w3.org/TR/REC-xml/#sec-notation), which adds support for ranges and regular-expression like multiplicity modifiers.
+There are several formats to formally define a language's syntax (also known as its _grammar_), but one of the most used is [Extended Backus-Naur Form](https://en.wikipedia.org/wiki/Extended_Backus%E2%80%93Naur_form). We'll define our syntax in the [W3C EBNF dialect](https://www.w3.org/TR/REC-xml/#sec-notation), which adds support for ranges and regular-expression like multiplicity modifiers.
+
+EBNF grammars are defined using _rules_ which usually build upon each other. Let's start by defining rules for letters and digits:
+
+```bnf
+letter ::= [a-zA-Z]
+digit  ::= [0-9]
+```
+
+Anyone familiar with [regular expressions](https://en.wikipedia.org/wiki/Regular_expression) will recognize these as ranges. The `letter` rule will match any lowercase or uppercase letter and the `digit` rule will match any digit.
+
+Using these base rules, we can then define the rules for our select field and select element expressions:
+
+```bnf
+field ::= '.' letter+
+index ::= '.[' digit+ ']'
+```
+
+Here, you can see that the `field` rule first specifies that the `.` character must occur, followed by one or more letters. Similarly, the `index` rules start with the `.` and `[` characters, followed by one or more digits and ending with the `]` character. The definitions answer our previously open questions: fields can only use letters (to simplify things) and indices cannot use negative numbers.
+
+The rules for the length and exists queries are simple:
+
+```bnf
+length ::= 'length'
+exists ::= 'exists'
+```
+
+We can now define a rule to match when one of the four expression rules is used:
+
+```bnf
+expr ::= field | index | length | exists
+```
+
+With this rule being defined, we support single expression queries. The final step is to allow chaining queries:
+
+```bnf
+query ::= expr ('|' expr)*
+```
+
+Here we specify that a query consists of at least one expression, followed by zero or more expressions that are preceded by the `|` character.
+
+And with that we now a formal specification for our language defined in EBNF.
 
 ```bnf
 letter ::= [a-zA-Z]
 digit  ::= [0-9]
 
-field  ::= '.' letter+;
+field  ::= '.' letter+
 index  ::= '.[' digit+ ']'
 length ::= 'length'
 exists ::= 'exists'
 
-expr   ::= field | index | exists
+expr   ::= field | index | length | exists
 query  ::= expr ('|' expr)*
 ```
 
