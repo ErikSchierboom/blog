@@ -141,12 +141,17 @@ query  ::= expr ('|' expr)*
 
 ## Lexer
 
-TODO: difference lexer/tokenizer
+We are now ready to start coding! The first step in implementing a programming language is to implement a lexer (sometimes referred to as a tokenizer). A lexer converts source code (text) to a sequence of tokens (syntax). This process is called _tokenization_.
 
-## Superpower
+Tokens are the most basic constructs of a language. By themselves, they don't have any meaning (syntax), only when they are combined in a certain order do they gain meaning (semantics). Tokenization is _only_ concerned with syntax though, so we can ignore the semantics for now.
 
-https://github.com/datalust/superpower
-https://github.com/sprache/Sprache
+There are many ways to implement a lexer. One approach is to use a tool like [ANTLR](https://www.antlr.org/), which can generate a lexer from an (E)BNF specification. Another commonly used alternative is [Lex and Yacc](http://dinosaur.compilertools.net/). Hand-crafting a tokenizer is of course also possible, but we'll use a fourth option: using a [parser combinator](https://en.wikipedia.org/wiki/Parser_combinator).
+
+## Parser combinators
+
+A parser combinator is a library that allows parsing text by defining mini-parsers, which are defined as functions. What makes parser combinators great is that they offer a suite of functions to combine simple parsers into more complex parsers. This makes it a perfect fit for implementing our lexer.
+
+The library we'll be using is called [Superpower](https://github.com/datalust/superpower).
 
 ## Implementation
 
