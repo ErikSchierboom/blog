@@ -94,14 +94,21 @@ digit  ::= [0-9]
 
 Anyone familiar with [regular expressions](https://en.wikipedia.org/wiki/Regular_expression) will recognize these as ranges. The `letter` rule will match any lowercase or uppercase letter and the `digit` rule will match any digit.
 
-Using these base rules, we can then define the rules for our select field and select element expressions:
+Using these base rules, we can then define the rules for identifiers and numbers, which are respectively one or more letters and one or more digits:
 
 ```bnf
-field ::= '.' letter+
-index ::= '.[' digit+ ']'
+identifier ::= letter+
+number     ::= digit+
 ```
 
-Here, you can see that the `field` rule first specifies that the `.` character must occur, followed by one or more letters. Similarly, the `index` rules start with the `.` and `[` characters, followed by one or more digits and ending with the `]` character. The definitions answer our previously open questions: fields can only use letters (to simplify things) and indices cannot use negative numbers.
+The uses for the select field and select element expressions use these two rules, but combined with string literals:
+
+```bnf
+field ::= '.' identifier
+index ::= '.[' number ']'
+```
+
+Here, you can see that the `field` rule first specifies that the `.` string literal must occur, followed by an identifier (one or more letters). Similarly, the `index` rule starts with the `.[` string literal, followed by a number (one or more digits) and ending with the `]` string literal. The definitions answer our previously open questions: fields can only use letters (to simplify things) and indices cannot use negative numbers.
 
 The rules for the length and exists queries are simple:
 
@@ -127,16 +134,18 @@ Here we specify that a query consists of at least one expression, followed by ze
 And with that we now a formal specification for our language defined in EBNF.
 
 ```bnf
-letter ::= [a-zA-Z]
-digit  ::= [0-9]
+letter     ::= [a-zA-Z]
+digit      ::= [0-9]
+identifier ::= letter+
+number     ::= digit+
 
-field  ::= '.' letter+
-index  ::= '.[' digit+ ']'
-length ::= 'length'
-exists ::= 'exists'
+field      ::= '.' letter+
+index      ::= '.[' digit+ ']'
+length     ::= 'length'
+exists     ::= 'exists'
 
-expr   ::= field | index | length | exists
-query  ::= expr ('|' expr)*
+expr       ::= field | index | length | exists
+query      ::= expr ('|' expr)*
 ```
 
 ## Lexer
@@ -151,9 +160,118 @@ There are many ways to implement a lexer. One approach is to use a tool like [AN
 
 A parser combinator is a library that allows parsing text by defining mini-parsers, which are defined as functions. What makes parser combinators great is that they offer a suite of functions to combine simple parsers into more complex parsers. This makes it a perfect fit for implementing our lexer.
 
-The library we'll be using is called [Superpower](https://github.com/datalust/superpower).
+The library we'll be using is called [Superpower](https://github.com/datalust/superpower), which is itself the successor of [Sprache](https://github.com/sprache/Sprache).
 
 ## Implementation
+
+Superpower allows us to define parsers in two ways:
+
+1. Text-based parsers, which are fairly high-level
+1. Token-based parsers, which are more low-level
+
+The benefit of token-based parsers is that they can provide better error messages than text-based parsers. As (good) error messages are very important to a compiler, we'll go with the token-based parser approach.
+
+Let's briefly list our EBNF grammar again:
+
+```bnf
+letter     ::= [a-zA-Z]
+digit      ::= [0-9]
+identifier ::= letter+
+number     ::= digit+
+
+field      ::= '.' letter+
+index      ::= '.[' digit+ ']'
+length     ::= 'length'
+exists     ::= 'exists'
+
+expr       ::= field | index | length | exists
+query      ::= expr ('|' expr)*
+```
+
+To convert this grammar into a format that Superpower can work with, we need to define an enum with its members representing each type of token. Each token type member must also be annotated with the `[Token]` attribute.
+
+The first token type we'll define members for are _keywords_, which are words that have a special meaning in a language. Our language has two keywords: `length` and `exists`, which we'll define as follows:
+
+```csharp
+public enum TokenKind
+{
+    [Token]
+    LengthKeyword,
+
+    [Token]
+    ExistsKeyword
+}
+```
+
+Note that these tokens directly correspond to the `length` and `exists` rules from our grammar. We can also define token types for our `identifier` and `number` rules:
+
+```csharp
+public enum TokenKind
+{
+    // Keyword members ...
+
+    [Token]
+    Identifier,
+
+    [Token]
+    Number,
+}
+```
+
+The final token types we need to define are for the characters used in the string literals (`.`, `[`, `]` and `|`):
+
+```csharp
+public enum TokenKind
+{
+    // Keyword, identifier and number members ...
+
+    [Token]
+    Dot,
+
+    [Token]
+    OpenBracket,
+
+    [Token]
+    CloseBracket,
+
+    [Token]
+    Pipe
+}
+```
+
+Note that the names of these tokens reflect the character they represent, _not_ how we interpret them later on. This makes sense as the same token can have a different meaning depending on the context.
+
+```csharp
+using Superpower;
+using Superpower.Model;
+using Superpower.Parsers;
+using Superpower.Tokenizers;
+
+namespace Spil.Language
+{
+    public static class Lexer
+    {
+        private static readonly Tokenizer<TokenKind> TokenizerImpl = CreateTokenizer();
+
+        private static Tokenizer<TokenKind> CreateTokenizer() =>
+            new TokenizerBuilder<TokenKind>()
+                .Ignore(Span.WhiteSpace)
+                .Match(Numerics.IntegerInt32, TokenKind.Number)
+                .Match(Span.EqualTo("."), TokenKind.Dot)
+                .Match(Span.EqualTo("["), TokenKind.OpenBracket)
+                .Match(Span.EqualTo("]"), TokenKind.CloseBracket)
+                .Match(Span.EqualTo("|"), TokenKind.Pipe)
+                .Match(Span.EqualTo("length"), TokenKind.LengthKeyword)
+                .Match(Span.EqualTo("exists"), TokenKind.ExistsKeyword)
+                .Match(Span.EqualTo("first"), TokenKind.FirstKeyword)
+                .Match(Character.Letter.AtLeastOnce(), TokenKind.Identifier)
+                .Build();
+
+        public static Result<TokenList<TokenKind>> Tokenize(string source) =>
+            TokenizerImpl.TryTokenize(source.Trim());
+    }
+}
+```
 
 ```csharp
 using Superpower.Display;
