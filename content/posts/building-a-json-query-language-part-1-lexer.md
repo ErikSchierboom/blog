@@ -171,7 +171,9 @@ Superpower allows us to define parsers in two ways:
 
 The benefit of token-based parsers is that they can provide better error messages than text-based parsers. As (good) error messages are very important to a compiler, we'll go with the token-based parser approach.
 
-Let's briefly list our EBNF grammar again:
+### Tokens
+
+Let's recall what our EBNF grammar looks like:
 
 ```bnf
 letter     ::= [a-zA-Z]
@@ -193,6 +195,8 @@ To convert this grammar into a format that Superpower can work with, we need to 
 The first token type we'll define members for are _keywords_, which are words that have a special meaning in a language. Our language has two keywords: `length` and `exists`, which we'll define as follows:
 
 ```csharp
+// TODO: add using statement
+
 public enum TokenKind
 {
     [Token]
@@ -239,7 +243,28 @@ public enum TokenKind
 }
 ```
 
-Note that the names of these tokens reflect the character they represent, _not_ how we interpret them later on. This makes sense as the same token can have a different meaning depending on the context.
+Note that the names of the tokens reflect the character they represent, _not_ how we interpret them later on. This makes sense as the same token can have a different meaning depending on the context.
+
+### Tokenizer
+
+The next step is to implement a _tokenizer_, which will take a string (the source code) and parses it to a sequence of tokens. In Superpower, a tokenizer is represented by the generic `Tokenizer<T>` type, where `T` is the type of the `enum` defining the tokens.
+
+To create a tokenizer, the `TokenizerBuilder<T>` type is used. This builder class has a nice fluent interface for mapping source code to tokens. Let start with building a minimal tokenizer that can parse the `.` character to `TokenKind.Dot`:
+
+```csharp
+Tokenizer<TokenKind> tokenizer =
+    new TokenizerBuilder<TokenKind>()
+        .Match(Span.EqualTo("."), TokenKind.Dot)
+        .Build();
+```
+
+We can then run
+
+```csharp
+tokenizer.TryTokenize(source.Trim());
+```
+
+TODO: check if there is Tokenize available (no Try)`
 
 ```csharp
 using Superpower;
@@ -247,29 +272,24 @@ using Superpower.Model;
 using Superpower.Parsers;
 using Superpower.Tokenizers;
 
-namespace Spil.Language
+public static class Lexer
 {
-    public static class Lexer
-    {
-        private static readonly Tokenizer<TokenKind> TokenizerImpl = CreateTokenizer();
+    public static Result<TokenList<TokenKind>> Tokenize(string source) =>
+        CreateTokenizer().TryTokenize(source.Trim());
 
-        private static Tokenizer<TokenKind> CreateTokenizer() =>
-            new TokenizerBuilder<TokenKind>()
-                .Ignore(Span.WhiteSpace)
-                .Match(Numerics.IntegerInt32, TokenKind.Number)
-                .Match(Span.EqualTo("."), TokenKind.Dot)
-                .Match(Span.EqualTo("["), TokenKind.OpenBracket)
-                .Match(Span.EqualTo("]"), TokenKind.CloseBracket)
-                .Match(Span.EqualTo("|"), TokenKind.Pipe)
-                .Match(Span.EqualTo("length"), TokenKind.LengthKeyword)
-                .Match(Span.EqualTo("exists"), TokenKind.ExistsKeyword)
-                .Match(Span.EqualTo("first"), TokenKind.FirstKeyword)
-                .Match(Character.Letter.AtLeastOnce(), TokenKind.Identifier)
-                .Build();
-
-        public static Result<TokenList<TokenKind>> Tokenize(string source) =>
-            TokenizerImpl.TryTokenize(source.Trim());
-    }
+    private static Tokenizer<TokenKind> CreateTokenizer() =>
+        new TokenizerBuilder<TokenKind>()
+            .Ignore(Span.WhiteSpace)
+            .Match(Numerics.IntegerInt32, TokenKind.Number)
+            .Match(Span.EqualTo("."), TokenKind.Dot)
+            .Match(Span.EqualTo("["), TokenKind.OpenBracket)
+            .Match(Span.EqualTo("]"), TokenKind.CloseBracket)
+            .Match(Span.EqualTo("|"), TokenKind.Pipe)
+            .Match(Span.EqualTo("length"), TokenKind.LengthKeyword)
+            .Match(Span.EqualTo("exists"), TokenKind.ExistsKeyword)
+            .Match(Span.EqualTo("first"), TokenKind.FirstKeyword)
+            .Match(Character.Letter.AtLeastOnce(), TokenKind.Identifier)
+            .Build();
 }
 ```
 
