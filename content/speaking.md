@@ -18,7 +18,7 @@ Having a passion for sharing knowledge, I've spoken at conferences, meetups and 
 
 - [Analyzing source code using Roslyn @ NDC Oslo 2020](https://www.youtube.com/watch?v=w9T8pSVcX3Q&ab_channel=NDCConferences)
 - [Exercism exercise deep dives](https://youtube.com/playlist?list=PLpsileTZltjUVU-HD9hmNPp5LWL18ucCG&si=Of1vSUTVkcKljwq2)
-- [Programming language introductions](https://youtube.com/playlist?list=PLpsileTZltjUVU-HD9hmNPp5LWL18ucCG&si=hS7e4yXAy4HJMO4T)
+- [Programming language introductions](https://youtube.com/playlist?list=PLpsileTZltjWrPQjTzJ8Fj2ah7JGBCss5&si=ZZQaKx-uP90A3ULD)
 
 ## Interested?
 
