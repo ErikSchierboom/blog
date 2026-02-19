@@ -13,7 +13,7 @@ Over the years I have worked on lots of software projects, such as:
   - [Website](https://github.com/exercism/website/commits?author=ErikSchierboom)
   - [GitHub Actions](https://github.com/exercism/github-actions/commits?author=ErikSchierboom)
   - [configlet](https://github.com/exercism/configlet/commits?author=ErikSchierboom)
-  - Many tracks, including [C#](https://github.com/exercism/csharp/commits?author=ErikSchierboom), [F#](https://github.com/exercism/fsharp/commits?author=ErikSchierboom), [Prolog](https://github.com/exercism/prolog/commits?author=ErikSchierboom), [R](https://github.com/exercism/r/commits?author=ErikSchierboom), [Uiua](https://github.com/exercism/uiua /commits?author=ErikSchierboom), and more
+  - Many tracks, including [C#](https://github.com/exercism/csharp/commits?author=ErikSchierboom), [F#](https://github.com/exercism/fsharp/commits?author=ErikSchierboom), [Prolog](https://github.com/exercism/prolog/commits?author=ErikSchierboom), [R](https://github.com/exercism/r/commits?author=ErikSchierboom), [Uiua](https://github.com/exercism/uiua/commits?author=ErikSchierboom), and more
   - Any much more...
 
 - [iCheckMovies](http://www.icheckmovies.com): a website that allows people to keep track of what movies they have seen.
